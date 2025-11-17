@@ -1,40 +1,48 @@
 package com.example.mobilea1;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 
 import com.example.mobilea1.mgp2dCore.GameActivity;
+import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.GameScene;
+
+import java.util.Vector;
 
 public class MainGameScene extends GameScene {
 
-    private Bitmap backgroundBitmap;
-    int screenHeight;
-    int screenWidth;
+    Vector<GameEntity> _gameEntities = new Vector<>();
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
-        screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
+        _gameEntities.add(new BackgroundEntity());
 
-        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.illegelhowchien);
-        backgroundBitmap = Bitmap.createScaledBitmap(bmp, screenWidth, screenHeight, true);
+        PlayerCharacter playerCharacter0 = new PlayerCharacter();
+        playerCharacter0.name = "Witz";
+
+        playerCharacter0.onCreate();
     }
 
 
     @Override
     public void onUpdate(float dt)
     {
+        for(GameEntity entity: _gameEntities)
+            entity.onUpdate(dt);
 
+        MotionEvent motionEvent = GameActivity.instance.getMotionEvent();
+        if(motionEvent == null)
+            return;
+        if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+            GameActivity.instance.finish();
     }
 
     @Override
     public void onRender(Canvas canvas)
     {
-        canvas.drawBitmap(backgroundBitmap, 0,0,null);
+        for(GameEntity entity: _gameEntities)
+            entity.onRender(canvas);
     }
 }
