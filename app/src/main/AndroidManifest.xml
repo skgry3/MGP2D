@@ -32,5 +32,10 @@
         tools:ignore="DiscouragedAPI">
     </activity>
 
+    <activity android:name = ".mgp2dCore.GameActivity"
+            android:screenOrientation = "sensorLandscape"
+            tools:ignore="DiscouragedAPI">
+    </activity>
+
     </application>
 </manifest>

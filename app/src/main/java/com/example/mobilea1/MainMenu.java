@@ -11,8 +11,8 @@ import com.example.mobilea1.mgp2dCore.GameScene;
 
 public class MainMenu extends Activity implements View.OnClickListener {
 
-    private Button helpBtn;
-    private Button playBtn;
+    private Button HelpBtn;
+    private Button PlayBtn;
 
     @Override
     protected void onCreate(Bundle saveInstanceState)
@@ -20,22 +20,22 @@ public class MainMenu extends Activity implements View.OnClickListener {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.mainmenu);
 
-        helpBtn = findViewById(R.id.helpBtn);
-        helpBtn.setOnClickListener(this);
+        HelpBtn = findViewById(R.id.helpBtn);
+        HelpBtn.setOnClickListener(this);
 
-        playBtn = findViewById(R.id.playBtn);
-        playBtn.setOnClickListener(this);
+        PlayBtn = findViewById(R.id.playBtn);
+        PlayBtn.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v)
     {
-        if(v == helpBtn)
+        if(v == HelpBtn)
         {
             startActivity(new Intent().setClass(this, HelpMenu.class));
         }
-        else if(v == playBtn)
+        else if(v == PlayBtn)
         {
             startActivity(new Intent().setClass(this, GameActivity.class));
             GameScene.enter(MainGameScene.class);
