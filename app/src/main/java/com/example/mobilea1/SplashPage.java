@@ -7,6 +7,7 @@ public class SplashPage extends Activity implements View.OnClickListener  {
 
     @Override
     public void onClick(View v) {
+      //asdwadadwadadwadw
 
     }
 }
