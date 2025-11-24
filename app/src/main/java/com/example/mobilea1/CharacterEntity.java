@@ -1,8 +1,12 @@
 package com.example.mobilea1;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
+import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class CharacterEntity extends GameEntity implements IDamageable{
     public float health;
@@ -17,11 +21,12 @@ public class CharacterEntity extends GameEntity implements IDamageable{
         moveSpeed = 10;
         jumpHeight = 5;
         alive = true;
+        float sizeRelativeToScreen = 0.1f;
+        _position = new Vector2(0,0);
     }
 
     @Override
     public void onUpdate(float dt) {
-
     }
 
     @Override
