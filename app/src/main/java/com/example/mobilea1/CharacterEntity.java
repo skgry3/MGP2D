@@ -8,7 +8,7 @@ import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
-public class CharacterEntity extends GameEntity implements IDamageable{
+public class CharacterEntity extends PhysicObj implements IDamageable{
     public float health;
     public float moveSpeed;
     public float jumpHeight;
@@ -18,15 +18,15 @@ public class CharacterEntity extends GameEntity implements IDamageable{
     public CharacterEntity()
     {
         health = 100f;
-        moveSpeed = 10;
+        moveSpeed = 1;
         jumpHeight = 5;
         alive = true;
-        float sizeRelativeToScreen = 0.1f;
         _position = new Vector2(0,0);
     }
 
     @Override
     public void onUpdate(float dt) {
+        super.onUpdate(dt);
     }
 
     @Override

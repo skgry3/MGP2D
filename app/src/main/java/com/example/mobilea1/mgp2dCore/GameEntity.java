@@ -3,6 +3,9 @@ package com.example.mobilea1.mgp2dCore;
 import android.graphics.Canvas;
 
 public abstract class GameEntity {
+    private Vector2 size;
+    public Vector2 getSize(){ return size;}
+    public boolean show = false;
     protected Vector2 _position = new Vector2(0, 0);
     public Vector2 getPosition() { return _position.copy(); }
     public void setPosition(Vector2 position) { _position = position; }

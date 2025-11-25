@@ -13,23 +13,40 @@ public class PlayerCharacter extends CharacterEntity {
 
     private final Bitmap sprite;
     //AnimatedSprite animatedSprite;
+    public boolean chosen = false;
+    private Vector2 moveDir = new Vector2(0,0);
+
     public void onCreate()
     {
         System.out.println(this.name);
     }
-    public PlayerCharacter()
+    public PlayerCharacter(int size)
     {
         Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.runhaolinkin);
-        sprite = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth() * 1.5f), (int) (bmp.getHeight() * 1.5f), true);
+        sprite = Bitmap.createScaledBitmap(bmp, size, size, true);
+    }
+    public void setMovementDir(Vector2 dir)
+    {
+        moveDir = dir;
     }
 
     @Override
-    public void onUpdate(float dt) {
+    public void onUpdate(float dt)
+    {
+        if(chosen)
+        {
+            _position.x -= moveDir.x * moveSpeed;
+            _position.y -= moveDir.y * moveSpeed;
+
+            _position.x = Math.clamp(_position.x, 0, GameActivity.instance.getResources().getDisplayMetrics().widthPixels - getSize().x );
+            _position.y = Math.clamp(_position.y, 0, GameActivity.instance.getResources().getDisplayMetrics().heightPixels - getSize().y );
+        }
+        super.onUpdate(dt);
     }
 
     @Override
     public void onRender(Canvas canvas) {
-        canvas.drawBitmap(sprite, _position.x, _position.y, null);
+        canvas.drawBitmap(sprite, _position.x - getSize().x, _position.y - getSize().y, null);
     }
 
 }

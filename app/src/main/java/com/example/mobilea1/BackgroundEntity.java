@@ -23,7 +23,7 @@ public class BackgroundEntity extends GameEntity {
     @Override
     public void onUpdate(float dt)
     {
-        _backgroundPosition = (_backgroundPosition - dt * 500f) % _screenWidth;
+      //  _backgroundPosition = (_backgroundPosition - dt * 500f) % _screenWidth;
     }
 
     @Override
