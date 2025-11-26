@@ -1,4 +1,4 @@
-package com.example.mobilea1;
+package com.example.mobilea1.Physics;
 
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;

@@ -1,14 +1,11 @@
-package com.example.mobilea1;
+package com.example.mobilea1.Entities;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.example.mobilea1.mgp2dCore.GameActivity;
-import com.example.mobilea1.mgp2dCore.GameEntity;
+import com.example.mobilea1.Combat.IDamageable;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
-public class CharacterEntity extends PhysicObj implements IDamageable{
+public class CharacterEntity extends PhysicObj implements IDamageable {
     public float health;
     public float moveSpeed;
     public float maxSpeed;
@@ -18,6 +15,8 @@ public class CharacterEntity extends PhysicObj implements IDamageable{
     public boolean alive;
     protected int ID;
 
+    private Vector2 moveDir = new Vector2(0,0);
+    private Vector2 aimDir = new Vector2(0,0);
     public CharacterEntity()
     {
         health = 100f;
@@ -31,9 +30,27 @@ public class CharacterEntity extends PhysicObj implements IDamageable{
     public int getID() {
         return ID;
     }
-
+    public void setMovementDir(Vector2 dir)
+    {
+        moveDir = dir;
+        moveDir.y = 0;
+    }
+    public void Jump()
+    {
+        AddForce(jumpHeight, new Vector2(0,-1), ForceMode.Impulse);
+    }
+    public void setAimDir(Vector2 dir)
+    {
+        aimDir = dir;
+    }
+    public Vector2 getAimDir()
+    {
+        return aimDir;
+    }
     @Override
     public void onUpdate(float dt) {
+
+        AddForce(moveSpeed, moveDir, ForceMode.Force);
 
         if(VerticalVel > 1 && onGround)
             VerticalVel = 1;

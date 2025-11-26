@@ -1,9 +1,10 @@
-package com.example.mobilea1;
+package com.example.mobilea1.UI;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import com.example.mobilea1.R;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -14,7 +15,7 @@ public class Button extends GameEntity
     private final Bitmap PressedSprite;
     private boolean Pressed = false;
     private int radius;
-    Button(Vector2 position,int Radius)
+    public Button(Vector2 position,int Radius)
     {
        _position = position;
        radius = Radius;

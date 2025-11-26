@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileA1" >
 
-    <activity android:name="SplashPage"
+    <activity android:name=".Menus.SplashPage"
         android:exported="true"
         android:screenOrientation="sensorLandscape"
         tools:ignore="DiscouragedAPI">
@@ -22,12 +22,12 @@
         </intent-filter>
     </activity>
 
-    <activity android:name = ".MainMenu"
+    <activity android:name = ".Menus.MainMenu"
         android:screenOrientation = "sensorLandscape"
         tools:ignore="DiscouragedAPI">
     </activity>
 
-    <activity android:name = ".HelpMenu"
+    <activity android:name = ".Menus.HelpMenu"
         android:screenOrientation = "sensorLandscape"
         tools:ignore="DiscouragedAPI">
     </activity>

@@ -1,4 +1,4 @@
-package com.example.mobilea1;
+package com.example.mobilea1.Menus;
 
 import android.app.Activity;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.example.mobilea1;
+package com.example.mobilea1.Entities;
 
 import android.graphics.Canvas;
 
@@ -47,7 +47,7 @@ public class PhysicObj extends GameEntity {
     private void externalForces()
     {
         VerticalVel += gravity;
-        HorizontalVel += (friction * -HorizontalVel * 0.1f);
+        HorizontalVel += (friction * -HorizontalVel * 0.5f);
     }
     @Override
     public void onUpdate(float dt) {
@@ -56,14 +56,14 @@ public class PhysicObj extends GameEntity {
 
         externalForces();
 
+        System.out.println(HorizontalVel);
+
         if(Math.abs(HorizontalVel) < 5)
             HorizontalVel = 0;
 
         if(VerticalVel > gravity * 1.5)
             VerticalVel = gravity * 1.5f;
 
-        VerticalVel = Math.round(VerticalVel);
-        HorizontalVel = Math.round(HorizontalVel);
         _position.y +=  VerticalVel * dt ;
         _position.x +=  HorizontalVel * dt;
 

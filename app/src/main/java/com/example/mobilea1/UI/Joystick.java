@@ -1,9 +1,10 @@
-package com.example.mobilea1;
+package com.example.mobilea1.UI;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import com.example.mobilea1.R;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -19,7 +20,7 @@ public class Joystick extends GameEntity {
     private boolean Pressed = false;
     public Vector2 actuatorValues = new Vector2(0,0);
 
-    Joystick(Vector2 centerPos, int outerCircleR, int innerCircleR)
+    public Joystick(Vector2 centerPos, int outerCircleR, int innerCircleR)
     {
         outerCircleCenterPos = centerPos;
         innerCircleCenterPos = centerPos;

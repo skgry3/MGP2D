@@ -1,11 +1,19 @@
-package com.example.mobilea1;
+package com.example.mobilea1.Scenes;
 
 
 import android.graphics.Canvas;
-import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
+import com.example.mobilea1.Camera;
+import com.example.mobilea1.Physics.CollisionDetection;
+import com.example.mobilea1.Entities.BackgroundEntity;
+import com.example.mobilea1.Entities.CharacterEntity;
+import com.example.mobilea1.Entities.EnemyCharacter;
+import com.example.mobilea1.Entities.PlayerCharacter;
+import com.example.mobilea1.Entities.Ground;
+import com.example.mobilea1.UI.Button;
+import com.example.mobilea1.UI.Joystick;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.GameScene;
@@ -25,6 +33,7 @@ public class MainGameScene extends GameScene {
     Vector2 mapSize = new Vector2(5000,5000);
 
     Button jumpButton;
+    Button switchButton;
 
     @Override
     public void onCreate()
@@ -33,6 +42,7 @@ public class MainGameScene extends GameScene {
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
         jumpButton = new Button(new Vector2(screenWidth - 200, screenHeight - 200),100);
+        switchButton = new Button(new Vector2(screenWidth - 100, screenHeight - 300),100);
 
         super.onCreate();
         _gameEntities.add(new Camera());
@@ -46,6 +56,7 @@ public class MainGameScene extends GameScene {
         _gameEntities.add(new EnemyCharacter(characterSize, 2));
         _gameEntities.add(new Joystick(new Vector2(0,0), 70, 40));
         _gameEntities.add(jumpButton);
+        _gameEntities.add(switchButton);
 
         for(GameEntity entity: _gameEntities)
         {
