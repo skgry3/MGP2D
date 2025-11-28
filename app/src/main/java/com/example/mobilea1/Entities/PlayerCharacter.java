@@ -20,7 +20,7 @@ public class PlayerCharacter extends CharacterEntity {
 
     public void onCreate()
     {
-        System.out.println(this.name);
+        super.onCreate();
     }
     public PlayerCharacter(Vector2 characterSize, int id)
     {

@@ -15,7 +15,7 @@ public class Button extends GameEntity
     private final Bitmap PressedSprite;
     private boolean Pressed = false;
     private boolean wasPressed = false;
-    private boolean justPressed = false;
+    public boolean justPressed = false;
     private int radius;
     public int pointerID;
     public enum TYPE

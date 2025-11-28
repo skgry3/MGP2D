@@ -20,28 +20,40 @@ public abstract class WeaponBase extends GameEntity {
     int magAmt;
     int ammoPerMag;
     private float range;
+    protected CharacterEntity owner;
 
-    public abstract void Shoot();
-    protected void ShootRaycast(CharacterEntity player, Vector<EnemyCharacter> enemies, WeaponBase weaponBase)
+    WeaponBase()
     {
-        float p0_x = player.getPosition().x;
-        float p0_y = player.getPosition().y;
+        firerate = 0.1f;
+        reloadTime = 0.1f;
+        ammoAmt = 0;
+        magAmt = 10;
+        ammoPerMag = 10;
+        range = 10f;
+        show = true;
+    }
 
-        Vector2 dir = player.getAimDir().normalize();
+    public abstract void Shoot(CharacterEntity shooter, Vector <CharacterEntity> targets);
+    protected void ShootRaycast(CharacterEntity shooter, Vector<CharacterEntity> targets)
+    {
+        float p0_x = shooter.getPosition().x;
+        float p0_y = shooter.getPosition().y;
 
-        float rayLength = weaponBase.range;
+        Vector2 dir = shooter.getAimDir().normalize();
+
+        float rayLength = range;
 
         float p1_x = p0_x + dir.x * rayLength;
         float p1_y = p0_y + dir.y * rayLength;
 
         float closest = -1;
 
-        for (EnemyCharacter e : enemies) {
+        for (CharacterEntity c : targets) {
 
-            float left   = e.getPosition().x - e.getSize().x/2;
-            float right  = e.getPosition().x + e.getSize().x/2;
-            float top    = e.getPosition().y - e.getSize().y/2;
-            float bottom = e.getPosition().y + e.getSize().y/2;
+            float left   = c.getPosition().x - c.getSize().x/2;
+            float right  = c.getPosition().x + c.getSize().x/2;
+            float top    = c.getPosition().y - c.getSize().y/2;
+            float bottom = c.getPosition().y + c.getSize().y/2;
 
             float[] results = {
                     Raycast.getRayCast(p0_x, p0_y, p1_x, p1_y, left, top, right, top),      // top
@@ -61,6 +73,16 @@ public abstract class WeaponBase extends GameEntity {
     {
 
     }
+
+    @Override
+    public void onUpdate(float dt) {
+        Vector2 ownerPos = owner.getPosition();
+        Vector2 offset = owner.getAimDir().normalize();
+
+        _position = new Vector2(ownerPos.x + (-offset.x * size.x), ownerPos.y + (-offset.y * size.y));
+        super.onUpdate(dt);
+    }
+
     @Override
     public void onRender(Canvas canvas)
     {

@@ -26,6 +26,8 @@ import java.util.Vector;
 public class MainGameScene extends GameScene {
 
     Vector<GameEntity> _gameEntities = new Vector<>();
+    Vector<CharacterEntity> _charEntities = new Vector<>();
+
     MediaPlayer bgmPlayer;
 
     float screenWidth;
@@ -33,6 +35,7 @@ public class MainGameScene extends GameScene {
 
     Vector2 characterSize = new Vector2(100,100);
     Vector2 mapSize = new Vector2(5000,5000);
+    Camera MainCam;
     Joystick joystick;
     Button jumpButton;
     Button switchButton;
@@ -43,12 +46,13 @@ public class MainGameScene extends GameScene {
         screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
+        MainCam = new Camera();
         jumpButton = new Button(new Vector2(screenWidth - 200, screenHeight - 200),100, Button.TYPE.MomentaryPush);
         switchButton = new Button(new Vector2(screenWidth - 100, screenHeight - 400),100, Button.TYPE.Toggle);
         joystick = new Joystick(new Vector2(0,0), 70, 40);
 
         super.onCreate();
-        _gameEntities.add(new Camera());
+        _gameEntities.add(MainCam);
         _gameEntities.add(new BackgroundEntity(mapSize));
         _gameEntities.add(new Ground(new Vector2(mapSize.x * 0.9f,500)));
         _gameEntities.add(new PlayerCharacter(characterSize, 0));
@@ -81,6 +85,8 @@ public class MainGameScene extends GameScene {
                 CharacterEntity C = (CharacterEntity) entity;
                 C.alive = true;
                 C.setPosition(new Vector2(0, 100));
+                C.onCreate();
+                _charEntities.add(C);
             }
         }
 
@@ -109,17 +115,6 @@ public class MainGameScene extends GameScene {
             }
         }
         return result;
-    }
-    private Camera getCam()
-    {
-        for(GameEntity entity: _gameEntities)
-        {
-            if(entity instanceof Camera)
-            {
-                return (Camera) entity;
-            }
-        }
-        return null;
     }
     private BackgroundEntity getBg()
     {
@@ -227,6 +222,10 @@ public class MainGameScene extends GameScene {
                 else if(pointerID == switchButton.pointerID)
                 {
                     switchButton.setPressed(false, pointerID);
+
+                    joystick.setPressed(false);
+                    joystick.resetActuator();
+
                     System.out.println("switchBtn up " + pointerID);
                 }
                 break;
@@ -239,13 +238,12 @@ public class MainGameScene extends GameScene {
     @Override
     public void onUpdate(float dt)
     {
-        Camera cam = getCam();
-        assert cam != null;
-
+        //get player
         PlayerCharacter chosenChar = (PlayerCharacter) getCharacterEntity(1, true);
         assert chosenChar != null;
 
-        cam.setTarget(chosenChar);
+
+        MainCam.setTarget(chosenChar);
 
         chosenChar.chosen = true;
 
@@ -253,6 +251,8 @@ public class MainGameScene extends GameScene {
 
         if(switchButton.toggled) //fire mode
         {
+            chosenChar.stopMovement();
+            chosenChar.setMovementDir(new Vector2(0,0));
             if(joystick.isPressed())
             {
                 chosenChar.setAimDir(joystick.actuatorValues);

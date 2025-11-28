@@ -8,8 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.example.mobilea1.Combat.IDamageable;
-import com.example.mobilea1.Physics.Raycast;
+import com.example.mobilea1.Combat.RaycastWeapon;
+import com.example.mobilea1.Combat.WeaponBase;
 import com.example.mobilea1.mgp2dCore.Vector2;
+
+import java.util.Vector;
 
 public class CharacterEntity extends PhysicObj implements IDamageable {
     public float health;
@@ -23,7 +26,7 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
 
     private Vector2 moveDir = new Vector2(0,0);
     private Vector2 aimDir = new Vector2(0,0);
-
+    Vector<WeaponBase> _weapons = new Vector<>();
     Paint debugPaint = new Paint();
     {
         debugPaint.setColor(Color.RED);
@@ -37,6 +40,10 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
         jumpHeight = 1000;
         alive = true;
         _position = new Vector2(0,0);
+    }
+    public void onCreate()
+    {
+        _weapons.add(new RaycastWeapon(this, "SMG", new Vector2(50,50)));
     }
 
     public int getID() {
@@ -69,11 +76,19 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
         HorizontalVel = Math.clamp(HorizontalVel,-maxSpeed, maxSpeed );
 
         super.onUpdate(dt);
+
+        for(WeaponBase weapon : _weapons)
+        {
+            weapon.onUpdate(dt);
+        }
     }
 
     @Override
     public void onRender(Canvas canvas) {
-            canvas.drawLine(_renderPosition.x, _renderPosition.y, aimDir.x * -20, aimDir.y * -20, debugPaint);
+        for(WeaponBase weapon : _weapons)
+        {
+            weapon.onRender(canvas);
+        }
     }
 
     @Override

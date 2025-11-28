@@ -23,8 +23,10 @@ public abstract class GameEntity {
 
     public void onUpdate(float dt)
     {
-        _renderPosition.x = _position.x - (getSize().x * 0.5f) - Camera.getOffset().x;
-        _renderPosition.y = _position.y -(getSize().y * 0.5f) - Camera.getOffset().y;
+        if(show) {
+            _renderPosition.x = _position.x - (getSize().x * 0.5f) - Camera.getOffset().x;
+            _renderPosition.y = _position.y - (getSize().y * 0.5f) - Camera.getOffset().y;
+        }
     }
     public abstract void onRender(Canvas canvas);
 }
