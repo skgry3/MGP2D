@@ -19,6 +19,7 @@ public class Joystick extends GameEntity {
     private int innerCircleRadius;
     private boolean Pressed = false;
     public Vector2 actuatorValues = new Vector2(0,0);
+    public int pointerID;
 
     public Joystick(Vector2 centerPos, int outerCircleR, int innerCircleR)
     {
@@ -32,6 +33,8 @@ public class Joystick extends GameEntity {
         Bitmap bmpOut = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsleypeach);
         innerSprite = Bitmap.createScaledBitmap(bmpIn, innerCircleR * 2, innerCircleR *2, true);
         outerSprite = Bitmap.createScaledBitmap(bmpOut, outerCircleR *2, outerCircleR *2, true);
+
+        pointerID = -1;
     }
     public void setPressed(boolean pressed)
     {
@@ -45,8 +48,17 @@ public class Joystick extends GameEntity {
     {
         float deltaX = outerCircleCenterPos.x - touchPos.x;
         float deltaY = outerCircleCenterPos.y - touchPos.y;
-        deltaX = Math.clamp(deltaX, -outerCircleRadius, outerCircleRadius);
-        deltaY = Math.clamp(deltaY, -outerCircleRadius, outerCircleRadius);
+
+        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        if (distance > outerCircleRadius)
+        {
+            float normalizedDeltaX = deltaX / distance;
+            float normalizedDeltaY = deltaY / distance;
+
+            deltaX = normalizedDeltaX * outerCircleRadius;
+            deltaY = normalizedDeltaY * outerCircleRadius;
+        }
 
         actuatorValues = new Vector2(deltaX, deltaY);
 

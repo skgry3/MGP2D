@@ -1,8 +1,14 @@
 package com.example.mobilea1.Entities;
 
+import static com.example.mobilea1.Physics.Raycast.getRayCast;
+import static com.example.mobilea1.Physics.Raycast.raycastHitPoint;
+
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.example.mobilea1.Combat.IDamageable;
+import com.example.mobilea1.Physics.Raycast;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class CharacterEntity extends PhysicObj implements IDamageable {
@@ -17,6 +23,12 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
 
     private Vector2 moveDir = new Vector2(0,0);
     private Vector2 aimDir = new Vector2(0,0);
+
+    Paint debugPaint = new Paint();
+    {
+        debugPaint.setColor(Color.RED);
+        debugPaint.setStrokeWidth(5);
+    }
     public CharacterEntity()
     {
         health = 100f;
@@ -49,7 +61,6 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
     }
     @Override
     public void onUpdate(float dt) {
-
         AddForce(moveSpeed, moveDir, ForceMode.Force);
 
         if(VerticalVel > 1 && onGround)
@@ -62,7 +73,7 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
 
     @Override
     public void onRender(Canvas canvas) {
-
+            canvas.drawLine(_renderPosition.x, _renderPosition.y, aimDir.x * -20, aimDir.y * -20, debugPaint);
     }
 
     @Override

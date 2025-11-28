@@ -43,7 +43,11 @@ public class PhysicObj extends GameEntity {
                 break;
         }
     }
-
+    public void stopMovement()
+    {
+        VerticalVel = 0;
+        HorizontalVel = 0;
+    }
     private void externalForces()
     {
         VerticalVel += gravity;
@@ -55,8 +59,6 @@ public class PhysicObj extends GameEntity {
             return;
 
         externalForces();
-
-        System.out.println(HorizontalVel);
 
         if(Math.abs(HorizontalVel) < 5)
             HorizontalVel = 0;

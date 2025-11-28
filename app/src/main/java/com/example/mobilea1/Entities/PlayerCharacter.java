@@ -40,6 +40,7 @@ public class PlayerCharacter extends CharacterEntity {
     public void onRender(Canvas canvas)
     {
         canvas.drawBitmap(sprite, _renderPosition.x, _renderPosition.y, null);
+        super.onRender(canvas);
     }
 
 }

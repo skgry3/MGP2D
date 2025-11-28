@@ -14,8 +14,19 @@ public class Button extends GameEntity
     private final Bitmap UnpressedSprite;
     private final Bitmap PressedSprite;
     private boolean Pressed = false;
+    private boolean wasPressed = false;
+    private boolean justPressed = false;
     private int radius;
-    public Button(Vector2 position,int Radius)
+    public int pointerID;
+    public enum TYPE
+    {
+        MomentaryPush,
+        Toggle
+    }
+    public TYPE type;
+    public boolean toggled = false;
+
+    public Button(Vector2 position,int Radius,TYPE Type)
     {
        _position = position;
        radius = Radius;
@@ -24,14 +35,38 @@ public class Button extends GameEntity
         Bitmap bmpUnpressed = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsleypeach);
         PressedSprite = Bitmap.createScaledBitmap(bmpPressed, radius * 2, radius * 2, true);
         UnpressedSprite = Bitmap.createScaledBitmap(bmpUnpressed, radius * 2, radius * 2, true);
+
+
+        pointerID = -1;
+        type = Type;
     }
-    public void setPressed(boolean pressed)
+    public void setPressed(boolean pressed, int PointerID)
     {
+        wasPressed = Pressed;
         Pressed = pressed;
+
+        if (pressed)
+        {
+            pointerID = PointerID;
+            justPressed = !wasPressed;
+        }
+        else
+        {
+            pointerID = -1;
+            justPressed = false;
+        }
     }
-    public boolean isPressed()
+    public boolean isPressed(int PointerID)
     {
-        return Pressed;
+        return Pressed && pointerID == PointerID;
+    }
+    public void Unpressed(int PointerID)
+    {
+        if (pointerID != PointerID)
+            return;
+
+        Pressed = false;
+        pointerID = -1;
     }
     public boolean contains(float x, float y) {
         float dx = x - _position.x;
@@ -47,13 +82,17 @@ public class Button extends GameEntity
     @Override
     public void onRender(Canvas canvas)
     {
-        if(Pressed)
+        Bitmap spriteToDraw;
+
+        if (type == TYPE.MomentaryPush)
         {
-            canvas.drawBitmap(PressedSprite, _position.x - radius * 2, _position.y - radius * 2 , null);
+            spriteToDraw = Pressed ? PressedSprite : UnpressedSprite;
         }
-        else
+        else  // TYPE.Toggle
         {
-            canvas.drawBitmap(UnpressedSprite, _position.x - radius * 2, _position.y - radius *2, null);
+            spriteToDraw = toggled ? UnpressedSprite : PressedSprite;
         }
+
+        canvas.drawBitmap(spriteToDraw, _position.x - radius * 2, _position.y - radius * 2, null);
     }
 }

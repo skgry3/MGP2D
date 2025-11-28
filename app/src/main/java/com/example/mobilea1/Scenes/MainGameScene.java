@@ -1,8 +1,10 @@
 package com.example.mobilea1.Scenes;
 
 
+import android.app.Notification;
 import android.graphics.Canvas;
 import android.media.MediaPlayer;
+import android.os.health.SystemHealthManager;
 import android.view.MotionEvent;
 
 import com.example.mobilea1.Camera;
@@ -31,7 +33,7 @@ public class MainGameScene extends GameScene {
 
     Vector2 characterSize = new Vector2(100,100);
     Vector2 mapSize = new Vector2(5000,5000);
-
+    Joystick joystick;
     Button jumpButton;
     Button switchButton;
 
@@ -41,8 +43,9 @@ public class MainGameScene extends GameScene {
         screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
-        jumpButton = new Button(new Vector2(screenWidth - 200, screenHeight - 200),100);
-        switchButton = new Button(new Vector2(screenWidth - 100, screenHeight - 300),100);
+        jumpButton = new Button(new Vector2(screenWidth - 200, screenHeight - 200),100, Button.TYPE.MomentaryPush);
+        switchButton = new Button(new Vector2(screenWidth - 100, screenHeight - 400),100, Button.TYPE.Toggle);
+        joystick = new Joystick(new Vector2(0,0), 70, 40);
 
         super.onCreate();
         _gameEntities.add(new Camera());
@@ -54,7 +57,7 @@ public class MainGameScene extends GameScene {
         _gameEntities.add(new EnemyCharacter(characterSize, 0));
         _gameEntities.add(new EnemyCharacter(characterSize, 1));
         _gameEntities.add(new EnemyCharacter(characterSize, 2));
-        _gameEntities.add(new Joystick(new Vector2(0,0), 70, 40));
+        _gameEntities.add(joystick);
         _gameEntities.add(jumpButton);
         _gameEntities.add(switchButton);
 
@@ -129,17 +132,6 @@ public class MainGameScene extends GameScene {
         }
         return null;
     }
-    private Joystick getJoystick()
-    {
-        for(GameEntity entity: _gameEntities)
-        {
-            if(entity instanceof Joystick)
-            {
-                return (Joystick) entity;
-            }
-        }
-        return null;
-    }
     private Ground getGround()
     {
         for(GameEntity entity: _gameEntities)
@@ -161,43 +153,82 @@ public class MainGameScene extends GameScene {
         int index = event.getActionIndex();
         int pointerID = event.getPointerId(index);
 
-        Joystick joystick = getJoystick();
-        assert joystick != null;
+        float x = event.getX(index);   // pointer INDEX used
+        float y = event.getY(index);
 
-        switch(action)
-        {
+
+        switch(action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                //do something
-                if(event.getRawX() < (screenWidth *0.5))
-                {
-                    joystick.setPosition(new Vector2(event.getRawX(),  event.getRawY()));
-                    joystick.setPressed(true);
-                    joystick.resetActuator();
-                    joystick.show = true;
-                }
 
-                if(jumpButton.contains(event.getRawX(), event.getRawY()))
+                if(x < (screenWidth * 0.5))
                 {
-                    jumpButton.setPressed(true);
+                    if (joystick.pointerID == -1 )
+                    {
+                        joystick.pointerID = pointerID;
+
+                        joystick.setPosition(new Vector2(x, y));
+                        joystick.setPressed(true);
+                        joystick.resetActuator();
+                        joystick.show = true;
+
+                        System.out.println("joystick down " + joystick.pointerID);
+                    }
+                }
+                else if (jumpButton.contains(x, y))
+                {
+                    if(jumpButton.pointerID == -1)
+                    {
+                        jumpButton.setPressed(true, pointerID);
+
+                        System.out.println("jumpBtn down " + jumpButton.pointerID);
+                    }
+                }
+                else if (switchButton.contains(x,y))
+                {
+                    if(switchButton.pointerID == -1)
+                    {
+                        switchButton.setPressed(true, pointerID);
+                        switchButton.toggled = !switchButton.toggled;
+                        System.out.println("switchBtn down " + switchButton.pointerID);
+                    }
                 }
 
                 break;
             case MotionEvent.ACTION_MOVE:
-                //do something
-                if(joystick.isPressed())
+
+                if (joystick.isPressed())
                 {
-                    joystick.setActuator(new Vector2(event.getRawX(), event.getRawY()));
+                    int stickIndex = event.findPointerIndex(joystick.pointerID);
+
+                    if (stickIndex != -1) {
+                        float moveX = event.getX(stickIndex);
+                        float moveY = event.getY(stickIndex);
+                        joystick.setActuator(new Vector2(moveX, moveY));
+                    }
                 }
+
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
-                joystick.show = false;
-                joystick.resetActuator();
-                joystick.setPressed(false);
-
-                jumpButton.setPressed(false);
-
+                if (pointerID == joystick.pointerID)
+                {
+                    joystick.show = false;
+                    joystick.resetActuator();
+                    joystick.setPressed(false);
+                    joystick.pointerID = -1;
+                    System.out.println("joystick up " + pointerID);
+                }
+                else if(pointerID == jumpButton.pointerID)
+                {
+                    jumpButton.Unpressed(pointerID);
+                    System.out.println("jumpBtn up " + pointerID);
+                }
+                else if(pointerID == switchButton.pointerID)
+                {
+                    switchButton.setPressed(false, pointerID);
+                    System.out.println("switchBtn up " + pointerID);
+                }
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;
@@ -211,9 +242,6 @@ public class MainGameScene extends GameScene {
         Camera cam = getCam();
         assert cam != null;
 
-        Joystick joystick = getJoystick();
-        assert joystick != null;
-
         PlayerCharacter chosenChar = (PlayerCharacter) getCharacterEntity(1, true);
         assert chosenChar != null;
 
@@ -223,11 +251,21 @@ public class MainGameScene extends GameScene {
 
         handleTouch();
 
-        chosenChar.setMovementDir(joystick.actuatorValues);
-
-        if(jumpButton.isPressed() && chosenChar.onGround)
+        if(switchButton.toggled) //fire mode
         {
-            chosenChar.Jump();
+            if(joystick.isPressed())
+            {
+                chosenChar.setAimDir(joystick.actuatorValues);
+            }
+        }
+        else //move mode
+        {
+            chosenChar.setMovementDir(joystick.actuatorValues);
+
+            if(jumpButton.isPressed(jumpButton.pointerID) && chosenChar.onGround)
+            {
+                chosenChar.Jump();
+            }
         }
 
         for(GameEntity entity: _gameEntities)
