@@ -6,6 +6,7 @@ import android.graphics.Paint;
 
 import com.example.mobilea1.Camera;
 import com.example.mobilea1.Entities.CharacterEntity;
+import com.example.mobilea1.Entities.Ground;
 import com.example.mobilea1.Physics.Raycast;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -13,7 +14,7 @@ import com.example.mobilea1.mgp2dCore.Vector2;
 import java.util.Vector;
 
 public class RaycastWeapon extends WeaponBase{
-    Raycast.RaycastHit hit = null;
+    protected Raycast.RaycastHit hit = null;
     float p1_xRP = 0;
     float p1_yRP = 0;
     float pointxRP = 0;
@@ -32,6 +33,10 @@ public class RaycastWeapon extends WeaponBase{
                 CharacterEntity hitTarget = (CharacterEntity) hit.target;
                 hitTarget.takeDmg(dmg);
                 System.out.println("hit " + hitTarget.name + " for " + dmg);
+            }
+            if(hit.target instanceof Ground)
+            {
+                System.out.println("hit ground for " + dmg);
             }
         }
     }
@@ -66,8 +71,8 @@ public class RaycastWeapon extends WeaponBase{
     }
     Paint hitPaint = new Paint();
     {
-        debugPaint.setColor(Color.RED);
-        debugPaint.setStrokeWidth(5);
+        hitPaint.setColor(Color.GREEN);
+        hitPaint.setStrokeWidth(5);
     }
     @Override
     public void onRender(Canvas canvas) {

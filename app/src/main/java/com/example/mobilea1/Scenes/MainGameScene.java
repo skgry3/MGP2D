@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.example.mobilea1.Camera;
+import com.example.mobilea1.Combat.TurnBaseSystem;
 import com.example.mobilea1.Physics.CollisionDetection;
 import com.example.mobilea1.Entities.BackgroundEntity;
 import com.example.mobilea1.Entities.CharacterEntity;
@@ -25,9 +26,6 @@ public class MainGameScene extends GameScene {
 
     Vector<GameEntity> _gameEntities = new Vector<>();
     Vector<CharacterEntity> _charEntities = new Vector<>();
-    Vector<EnemyCharacter> _enemyEntities = new Vector<>();
-    Vector<PlayerCharacter> _playerEntities = new Vector<>();
-
     float screenWidth;
     float screenHeight;
 
@@ -37,6 +35,7 @@ public class MainGameScene extends GameScene {
     Joystick joystick;
     Button jumpButton;
     Button switchButton;
+    TurnBaseSystem TBS;
 
     @Override
     public void onCreate()
@@ -52,7 +51,7 @@ public class MainGameScene extends GameScene {
         super.onCreate();
         _gameEntities.add(MainCam);
         _gameEntities.add(new BackgroundEntity(mapSize));
-        _gameEntities.add(new Ground(new Vector2(mapSize.x * 0.9f,500)));
+        _gameEntities.add(new Ground(new Vector2(mapSize.x * 0.9f,1000)));
         _gameEntities.add(new PlayerCharacter(characterSize, 0, "MQQ"));
         //_gameEntities.add(new PlayerCharacter(characterSize, 1));
         //_gameEntities.add(new PlayerCharacter(characterSize, 2));
@@ -87,18 +86,10 @@ public class MainGameScene extends GameScene {
                 C.ignoreRaycast = false;
                 C.onCreate();
                 _charEntities.add(C);
-                if(entity instanceof PlayerCharacter)
-                {
-                    PlayerCharacter P = (PlayerCharacter) entity;
-                    _playerEntities.add(P);
-                }
-                else if(entity instanceof EnemyCharacter)
-                {
-                    EnemyCharacter E = (EnemyCharacter) entity;
-                    _enemyEntities.add(E);
-                }
             }
         }
+
+        TBS = new TurnBaseSystem(_charEntities);
 
     }
     private PlayerCharacter getPlayerEntity(int id)
@@ -314,26 +305,25 @@ public class MainGameScene extends GameScene {
             }
         }
 
-        for(int i = 0; i < _playerEntities.size(); i++)
+        for(int i = 0; i < _charEntities.size(); i++)
         {
-            PlayerCharacter pc = getPlayerEntity(i);
-            assert pc != null;
+            CharacterEntity ce = _charEntities.get(i);
 
             Ground ground = getGround();
             assert ground != null;
 
-            if(CollisionDetection.OverlapCircleToAABB(pc, ground))
+            if(CollisionDetection.OverlapCircleToAABB(ce, ground))
             {
                 // Calculate the overlap distances to move the objects apart
-                float overlapX = (pc.getSize().x * 0.5f) + (ground.getSize().x * 0.5f) - Math.abs(ground.getPosition().x - pc.getPosition().x);
-                float overlapY = (pc.getSize().y * 0.5f) + (ground.getSize().y * 0.5f) - Math.abs(ground.getPosition().y - pc.getPosition().y);
+                float overlapX = (ce.getSize().x * 0.5f) + (ground.getSize().x * 0.5f) - Math.abs(ground.getPosition().x - ce.getPosition().x);
+                float overlapY = (ce.getSize().y * 0.5f) + (ground.getSize().y * 0.5f) - Math.abs(ground.getPosition().y - ce.getPosition().y);
 
                 // Find the smallest move distance
                 float resolveX = 0;
                 float resolveY = 0;
                 if (overlapX < overlapY)
                 {
-                    if (pc.getPosition().x < ground.getPosition().x)
+                    if (ce.getPosition().x < ground.getPosition().x)
                     {
                         resolveX = -overlapX;
                     }
@@ -344,7 +334,7 @@ public class MainGameScene extends GameScene {
                 }
                 else
                 {
-                    if (pc.getPosition().y < ground.getPosition().y)
+                    if (ce.getPosition().y < ground.getPosition().y)
                     {
                         resolveY = -overlapY;
                     }
@@ -354,61 +344,13 @@ public class MainGameScene extends GameScene {
                     }
                 }
 
-                pc.setPosition(new Vector2(pc.getPosition().x + resolveX, pc.getPosition().y + resolveY));
+                ce.setPosition(new Vector2(ce.getPosition().x + resolveX, ce.getPosition().y + resolveY));
 
-                pc.onGround = true;
+                ce.onGround = true;
             }
             else
             {
-                pc.onGround = false;
-            }
-        }
-        for(int i = 0; i < _enemyEntities.size(); i++)
-        {
-            EnemyCharacter ec = getEnemyEntity(i);
-            assert ec != null;
-
-            Ground ground = getGround();
-            assert ground != null;
-
-            if(CollisionDetection.OverlapCircleToAABB(ec, ground))
-            {
-                // Calculate the overlap distances to move the objects apart
-                float overlapX = (ec.getSize().x * 0.5f) + (ground.getSize().x * 0.5f) - Math.abs(ground.getPosition().x - ec.getPosition().x);
-                float overlapY = (ec.getSize().y * 0.5f) + (ground.getSize().y * 0.5f) - Math.abs(ground.getPosition().y - ec.getPosition().y);
-
-                // Find the smallest move distance
-                float resolveX = 0;
-                float resolveY = 0;
-                if (overlapX < overlapY)
-                {
-                    if (ec.getPosition().x < ground.getPosition().x)
-                    {
-                        resolveX = -overlapX;
-                    }
-                    else
-                    {
-                        resolveX = overlapX;
-                    }
-                }
-                else
-                {
-                    if (ec.getPosition().y < ground.getPosition().y)
-                    {
-                        resolveY = -overlapY;
-                    }
-                    else
-                    {
-                        resolveY = overlapY;
-                    }
-                }
-                ec.setPosition(new Vector2(ec.getPosition().x + resolveX, ec.getPosition().y + resolveY));
-
-                ec.onGround = true;
-            }
-            else
-            {
-                ec.onGround = false;
+                ce.onGround = false;
             }
         }
 

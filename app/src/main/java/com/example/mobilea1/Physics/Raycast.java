@@ -49,7 +49,7 @@ public class Raycast {
             // Collision detected
             float pos_x = p0_x + (t * s1_x);
             float pos_y = p0_y + (t * s1_y);
-            return dist(0, 0, pos_x, pos_y);
+            return dist(p0_x, p0_y, pos_x, pos_y);
         }
         return -1; // No collision
     }

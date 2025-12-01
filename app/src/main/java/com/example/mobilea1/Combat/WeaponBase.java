@@ -19,6 +19,7 @@ public abstract class WeaponBase extends GameEntity {
      float  p1_x;
     float p1_y;
     protected CharacterEntity owner;
+    public boolean shot;
     WeaponBase()
     {
         dmg = 100;
@@ -34,14 +35,21 @@ public abstract class WeaponBase extends GameEntity {
         float p0_y = _position.y;
 
         Vector2 dir = shooter.getAimDir().normalize();
-        float sprayDelta = (float) (Math.random() * sprayDeg);
-
-        Vector2 sprayVector = new Vector2((float)Math.cos(Math.toRadians(sprayDelta)), (float)Math.sin(Math.toRadians(sprayDelta)));
-
         float rayLength = range;
 
-         p1_x = p0_x + (dir.x + sprayVector.x)* rayLength;
-         p1_y = p0_y + (dir.y + sprayVector.y) * rayLength;
+        float half = sprayDeg * 0.5f;
+        float angleOffset = (float)((Math.random() * sprayDeg) - half); // e.g. -5° to +5°
+
+        float aimAngle = (float)Math.atan2(dir.y, dir.x);
+        float sprayedAngle = aimAngle + (float)Math.toRadians(angleOffset);
+
+        dir = new Vector2(
+                (float)Math.cos(sprayedAngle),
+                (float)Math.sin(sprayedAngle)
+        );
+
+         p1_x = p0_x + dir.x* rayLength;
+         p1_y = p0_y + dir.y * rayLength;
 
         float closestDist = Float.MAX_VALUE;
         GameEntity closestTarget = null;

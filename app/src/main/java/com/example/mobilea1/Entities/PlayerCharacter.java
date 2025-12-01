@@ -23,6 +23,7 @@ public class PlayerCharacter extends CharacterEntity {
     }
     public PlayerCharacter(Vector2 characterSize, int id, String Name)
     {
+        isPlayer = true;
         size = characterSize;
         ID = id;
         name = Name;

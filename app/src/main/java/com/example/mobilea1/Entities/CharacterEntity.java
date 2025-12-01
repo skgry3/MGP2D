@@ -20,7 +20,8 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
     public String name = "name";
     public boolean alive;
     protected int ID;
-
+    public boolean isPlayer;
+    public boolean isEnemy;
     private Vector2 moveDir = new Vector2(0,0);
     private Vector2 aimDir = new Vector2(0,0);
     Vector<WeaponBase> _weapons = new Vector<>();
@@ -38,6 +39,8 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
         jumpHeight = 1000;
         alive = true;
         _position = new Vector2(0,0);
+        isPlayer = false;
+        isEnemy = false;
     }
     public void onCreate()
     {
@@ -120,7 +123,18 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
         //delete character
         alive = false;
         active = false;
+        ignoreRaycast = true;
         destroy();
         System.out.println( name + " died");
+    }
+
+    public void onTurnStart() {
+        for(WeaponBase weapon : _weapons)
+        {
+            if(weapon.shot)
+            {
+                weapon.shot = false;
+            }
+        }
     }
 }

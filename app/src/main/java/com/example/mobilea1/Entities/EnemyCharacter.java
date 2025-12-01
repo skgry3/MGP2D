@@ -23,6 +23,7 @@ public class EnemyCharacter extends CharacterEntity {
     }
     public EnemyCharacter(Vector2 characterSize, int id, String Name)
     {
+        isEnemy = true;
         size = characterSize;
         ID = id;
         name = Name;
