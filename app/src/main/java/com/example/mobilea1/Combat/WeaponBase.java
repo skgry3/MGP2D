@@ -3,7 +3,6 @@ package com.example.mobilea1.Combat;
 import android.graphics.Canvas;
 
 import com.example.mobilea1.Entities.CharacterEntity;
-import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Physics.Raycast;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -12,48 +11,52 @@ import java.util.Vector;
 
 public abstract class WeaponBase extends GameEntity {
 
-    String name;
-
-    float firerate;
-    float reloadTime;
-    int ammoAmt;
-    int magAmt;
-    int ammoPerMag;
-    private float range;
+    protected String name;
+    protected float dmg;
+    public float range;
+    protected int sprayAmt;
+    protected float sprayDeg;
+     float  p1_x;
+    float p1_y;
     protected CharacterEntity owner;
-
     WeaponBase()
     {
-        firerate = 0.1f;
-        reloadTime = 0.1f;
-        ammoAmt = 0;
-        magAmt = 10;
-        ammoPerMag = 10;
-        range = 10f;
+        dmg = 100;
+        range = 500f;
+        sprayAmt = 0;
+        sprayDeg = 0;
         show = true;
     }
 
-    public abstract void Shoot(CharacterEntity shooter, Vector <CharacterEntity> targets);
-    protected void ShootRaycast(CharacterEntity shooter, Vector<CharacterEntity> targets)
-    {
-        float p0_x = shooter.getPosition().x;
-        float p0_y = shooter.getPosition().y;
+    public abstract void Shoot(Vector<GameEntity> targets);
+    protected Raycast.RaycastHit ShootRaycast(CharacterEntity shooter, Vector<GameEntity> targets) {
+        float p0_x = _position.x;
+        float p0_y = _position.y;
 
         Vector2 dir = shooter.getAimDir().normalize();
+        float sprayDelta = (float) (Math.random() * sprayDeg);
+
+        Vector2 sprayVector = new Vector2((float)Math.cos(Math.toRadians(sprayDelta)), (float)Math.sin(Math.toRadians(sprayDelta)));
 
         float rayLength = range;
 
-        float p1_x = p0_x + dir.x * rayLength;
-        float p1_y = p0_y + dir.y * rayLength;
+         p1_x = p0_x + (dir.x + sprayVector.x)* rayLength;
+         p1_y = p0_y + (dir.y + sprayVector.y) * rayLength;
 
-        float closest = -1;
+        float closestDist = Float.MAX_VALUE;
+        GameEntity closestTarget = null;
 
-        for (CharacterEntity c : targets) {
+        for (GameEntity c : targets) {
 
-            float left   = c.getPosition().x - c.getSize().x/2;
-            float right  = c.getPosition().x + c.getSize().x/2;
-            float top    = c.getPosition().y - c.getSize().y/2;
-            float bottom = c.getPosition().y + c.getSize().y/2;
+            if(c.ignoreRaycast)
+                continue;
+            if(c == shooter)
+                continue;
+
+            float left = c.getPosition().x - c.getSize().x / 2;
+            float right = c.getPosition().x + c.getSize().x / 2;
+            float top = c.getPosition().y - c.getSize().y / 2;
+            float bottom = c.getPosition().y + c.getSize().y / 2;
 
             float[] results = {
                     Raycast.getRayCast(p0_x, p0_y, p1_x, p1_y, left, top, right, top),      // top
@@ -62,13 +65,23 @@ public abstract class WeaponBase extends GameEntity {
                     Raycast.getRayCast(p0_x, p0_y, p1_x, p1_y, right, top, right, bottom)   // right
             };
 
-            for(float d : results){
-                if(d != -1 && (closest == -1 || d < closest)){
-                    closest = d;
+            for (float d : results) {
+                if (d != -1 && d < closestDist) {
+                    closestDist = d;
+                    closestTarget = c;
                 }
             }
         }
+        if (closestTarget == null) return null;
+
+        Vector2 hitPoint = new Vector2(
+                p0_x + dir.x * closestDist,
+                p0_y + dir.y * closestDist
+        );
+
+        return new Raycast.RaycastHit(closestTarget, hitPoint);
     }
+
     protected void ShootProjectile()
     {
 
@@ -77,15 +90,14 @@ public abstract class WeaponBase extends GameEntity {
     @Override
     public void onUpdate(float dt) {
         Vector2 ownerPos = owner.getPosition();
-        Vector2 offset = owner.getAimDir().normalize();
-
-        _position = new Vector2(ownerPos.x + (-offset.x * size.x), ownerPos.y + (-offset.y * size.y));
+        facingDir = owner.getAimDir();
+        _rotationDeg = (float) Math.toDegrees(owner.getAimAngle());
+        _position = new Vector2( ownerPos.x + facingDir.x , ownerPos.y + facingDir.y );
         super.onUpdate(dt);
     }
 
     @Override
     public void onRender(Canvas canvas)
     {
-
     }
 }

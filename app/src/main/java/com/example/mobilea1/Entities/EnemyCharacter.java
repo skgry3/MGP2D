@@ -15,25 +15,21 @@ public class EnemyCharacter extends CharacterEntity {
     private final Bitmap sprite;
     //AnimatedSprite animatedSprite;
     public boolean chosen = false;
-    private Vector2 moveDir = new Vector2(0,0);
+
 
     public void onCreate()
     {
-        System.out.println(this.name);
+        super.onCreate();
     }
-    public EnemyCharacter(Vector2 characterSize, int id)
+    public EnemyCharacter(Vector2 characterSize, int id, String Name)
     {
         size = characterSize;
         ID = id;
+        name = Name;
 
-        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.runhaolinkin2);
+        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.runhaolinkin);
         sprite = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);
     }
-    public void setMovementDir(Vector2 dir)
-    {
-        moveDir = dir;
-    }
-
     @Override
     public void onUpdate(float dt)
     {
@@ -41,8 +37,10 @@ public class EnemyCharacter extends CharacterEntity {
     }
 
     @Override
-    public void onRender(Canvas canvas) {
+    public void onRender(Canvas canvas)
+    {
         canvas.drawBitmap(sprite, _renderPosition.x, _renderPosition.y, null);
+        super.onRender(canvas);
     }
 
 }

@@ -14,9 +14,8 @@ public class Button extends GameEntity
     private final Bitmap UnpressedSprite;
     private final Bitmap PressedSprite;
     private boolean Pressed = false;
-    private boolean wasPressed = false;
     public boolean justPressed = false;
-    private int radius;
+    private final int radius;
     public int pointerID;
     public enum TYPE
     {
@@ -42,7 +41,7 @@ public class Button extends GameEntity
     }
     public void setPressed(boolean pressed, int PointerID)
     {
-        wasPressed = Pressed;
+        boolean wasPressed = Pressed;
         Pressed = pressed;
 
         if (pressed)
@@ -68,6 +67,11 @@ public class Button extends GameEntity
         Pressed = false;
         pointerID = -1;
     }
+    public void reset()
+    {
+        Pressed = false;
+        pointerID = -1;
+    }
     public boolean contains(float x, float y) {
         float dx = x - _position.x;
         float dy = y - _position.y;
@@ -76,7 +80,6 @@ public class Button extends GameEntity
 
     @Override
     public void onUpdate(float dt) {
-        return;
     }
 
     @Override

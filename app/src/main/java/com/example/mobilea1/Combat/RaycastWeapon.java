@@ -1,39 +1,80 @@
 package com.example.mobilea1.Combat;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
+import com.example.mobilea1.Camera;
 import com.example.mobilea1.Entities.CharacterEntity;
-import com.example.mobilea1.R;
-import com.example.mobilea1.mgp2dCore.GameActivity;
+import com.example.mobilea1.Physics.Raycast;
+import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
 import java.util.Vector;
 
 public class RaycastWeapon extends WeaponBase{
-    private final Bitmap sprite;
-    public RaycastWeapon(CharacterEntity Owner, String Name, Vector2 Size)
-    {
-        owner = Owner;
-        name = Name;
-        size = Size;
+    Raycast.RaycastHit hit = null;
+    float p1_xRP = 0;
+    float p1_yRP = 0;
+    float pointxRP = 0;
+    float pointyRP = 0;
 
-        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.illegelhowchien);
-        sprite = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);
-    }
     @Override
-    public void Shoot(CharacterEntity shooter, Vector <CharacterEntity> targets) {
-        ShootRaycast(shooter, targets);
+    public void Shoot(Vector<GameEntity> targets) {
+        for(int i = 0; i < sprayAmt; i++) {
+            hit = ShootRaycast(owner, targets);
+            if (hit == null) {
+                System.out.println("hit nothing");
+                return;
+            }
+
+            if (hit.target instanceof CharacterEntity) {
+                CharacterEntity hitTarget = (CharacterEntity) hit.target;
+                hitTarget.takeDmg(dmg);
+                System.out.println("hit " + hitTarget.name + " for " + dmg);
+            }
+        }
     }
 
     @Override
     public void onUpdate(float dt) {
-        super.onUpdate(dt);
-    }
 
+        float p0_x = _position.x - size.x * 0.5f;
+        float p0_y = _position.y - size.y * 0.5f;
+
+        Vector2 dir = owner.getAimDir().normalize();
+
+        float rayLength = range;
+
+        p1_x = p0_x + dir.x * rayLength;
+        p1_y = p0_y + dir.y * rayLength;
+
+        p1_xRP = p1_x - Camera.getOffset().x;
+        p1_yRP = p1_y - Camera.getOffset().y;
+        if(hit != null)
+        {
+            pointxRP = hit.point.x - Camera.getOffset().x;
+            pointyRP = hit.point.y - Camera.getOffset().y;
+        }
+        super.onUpdate(dt);
+
+    }
+    Paint debugPaint = new Paint();
+    {
+        debugPaint.setColor(Color.RED);
+        debugPaint.setStrokeWidth(5);
+    }
+    Paint hitPaint = new Paint();
+    {
+        debugPaint.setColor(Color.RED);
+        debugPaint.setStrokeWidth(5);
+    }
     @Override
     public void onRender(Canvas canvas) {
-        canvas.drawBitmap(sprite, _renderPosition.x, _renderPosition.y, null);
+        if(hit != null)
+            canvas.drawLine(_renderPosition.x,_renderPosition.y,pointxRP, pointyRP, hitPaint);
+
+        canvas.drawLine(_renderPosition.x,_renderPosition.y, p1_xRP, p1_yRP, debugPaint);
+
     }
 }

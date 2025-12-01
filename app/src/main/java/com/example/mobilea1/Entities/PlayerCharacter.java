@@ -3,7 +3,6 @@ package com.example.mobilea1.Entities;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.os.health.SystemHealthManager;
 
 //import com.example.mobilea1.mgp2dCore.other.AnimatedSprite;
 
@@ -22,10 +21,11 @@ public class PlayerCharacter extends CharacterEntity {
     {
         super.onCreate();
     }
-    public PlayerCharacter(Vector2 characterSize, int id)
+    public PlayerCharacter(Vector2 characterSize, int id, String Name)
     {
         size = characterSize;
         ID = id;
+        name = Name;
 
         Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.runhaolinkin);
         sprite = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);

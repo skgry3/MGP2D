@@ -1,5 +1,6 @@
 package com.example.mobilea1.Physics;
 
+import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class Raycast {
@@ -37,8 +38,12 @@ public class Raycast {
         s2_x = p3_x - p2_x;
         s2_y = p3_y - p2_y;
         float s, t;
-        s = ((-s1_y * (p0_x - p2_x)) + (s1_x * (p0_y - p2_y))) / ((-s2_x * s1_y) + (s1_x * s2_y));
-        t = (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+        float v = (-s2_x * s1_y) + (s1_x * s2_y); //v = 0 -> parallel, v != 0 -> intersect
+
+        s = ((-s1_y * (p0_x - p2_x)) + (s1_x * (p0_y - p2_y))) / v; //line 1
+        t = (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / v; //line 2
+
         if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
         {
             // Collision detected
@@ -47,5 +52,14 @@ public class Raycast {
             return dist(0, 0, pos_x, pos_y);
         }
         return -1; // No collision
+    }
+    public static class RaycastHit {
+        public GameEntity target;
+        public Vector2 point;
+
+        public RaycastHit(GameEntity t, Vector2 p) {
+            target = t;
+            point = p;
+        }
     }
 }

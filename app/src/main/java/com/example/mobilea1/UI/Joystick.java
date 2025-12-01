@@ -15,8 +15,8 @@ public class Joystick extends GameEntity {
     private final Bitmap outerSprite;
     private Vector2 outerCircleCenterPos;
     private Vector2 innerCircleCenterPos;
-    private int outerCircleRadius;
-    private int innerCircleRadius;
+    private final int outerCircleRadius;
+    private final int innerCircleRadius;
     private boolean Pressed = false;
     public Vector2 actuatorValues = new Vector2(0,0);
     public int pointerID;
@@ -68,6 +68,13 @@ public class Joystick extends GameEntity {
     {
         innerCircleCenterPos = outerCircleCenterPos;
         actuatorValues = new Vector2(0,0);
+    }
+    public void resetJoystick()
+    {
+        show = false;
+        resetActuator();
+        setPressed(false);
+        pointerID = -1;
     }
     @Override
     public void onUpdate(float dt) {

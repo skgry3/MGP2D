@@ -1,10 +1,8 @@
 package com.example.mobilea1.Scenes;
 
 
-import android.app.Notification;
+
 import android.graphics.Canvas;
-import android.media.MediaPlayer;
-import android.os.health.SystemHealthManager;
 import android.view.MotionEvent;
 
 import com.example.mobilea1.Camera;
@@ -27,8 +25,8 @@ public class MainGameScene extends GameScene {
 
     Vector<GameEntity> _gameEntities = new Vector<>();
     Vector<CharacterEntity> _charEntities = new Vector<>();
-
-    MediaPlayer bgmPlayer;
+    Vector<EnemyCharacter> _enemyEntities = new Vector<>();
+    Vector<PlayerCharacter> _playerEntities = new Vector<>();
 
     float screenWidth;
     float screenHeight;
@@ -55,12 +53,12 @@ public class MainGameScene extends GameScene {
         _gameEntities.add(MainCam);
         _gameEntities.add(new BackgroundEntity(mapSize));
         _gameEntities.add(new Ground(new Vector2(mapSize.x * 0.9f,500)));
-        _gameEntities.add(new PlayerCharacter(characterSize, 0));
-        _gameEntities.add(new PlayerCharacter(characterSize, 1));
-        _gameEntities.add(new PlayerCharacter(characterSize, 2));
-        _gameEntities.add(new EnemyCharacter(characterSize, 0));
-        _gameEntities.add(new EnemyCharacter(characterSize, 1));
-        _gameEntities.add(new EnemyCharacter(characterSize, 2));
+        _gameEntities.add(new PlayerCharacter(characterSize, 0, "MQQ"));
+        //_gameEntities.add(new PlayerCharacter(characterSize, 1));
+        //_gameEntities.add(new PlayerCharacter(characterSize, 2));
+        _gameEntities.add(new EnemyCharacter(characterSize, 0, "Witz"));
+        //_gameEntities.add(new EnemyCharacter(characterSize, 1));
+        //_gameEntities.add(new EnemyCharacter(characterSize, 2));
         _gameEntities.add(joystick);
         _gameEntities.add(jumpButton);
         _gameEntities.add(switchButton);
@@ -69,12 +67,13 @@ public class MainGameScene extends GameScene {
         {
             entity.show = true;
             entity.active = true;
+            entity.ignoreRaycast = true;
         }
-
 
         if(getGround() != null)
         {
             getGround().setPosition(new Vector2(0, getGround().getSize().y * 0.5f));
+            getGround().ignoreRaycast = false;
         }
 
         //use for loop to activate and show all
@@ -85,44 +84,43 @@ public class MainGameScene extends GameScene {
                 CharacterEntity C = (CharacterEntity) entity;
                 C.alive = true;
                 C.setPosition(new Vector2(0, 100));
+                C.ignoreRaycast = false;
                 C.onCreate();
                 _charEntities.add(C);
+                if(entity instanceof PlayerCharacter)
+                {
+                    PlayerCharacter P = (PlayerCharacter) entity;
+                    _playerEntities.add(P);
+                }
+                else if(entity instanceof EnemyCharacter)
+                {
+                    EnemyCharacter E = (EnemyCharacter) entity;
+                    _enemyEntities.add(E);
+                }
             }
         }
 
     }
-    private CharacterEntity getCharacterEntity(int CharEntityID, boolean player)
+    private PlayerCharacter getPlayerEntity(int id)
     {
-        CharacterEntity result = null;
-        for(GameEntity entity: _gameEntities)
-        {
-            if(player)
-            {
-                if (entity instanceof PlayerCharacter) {
-                    CharacterEntity PC = (CharacterEntity) entity;
-                    if (PC.getID() == CharEntityID) {
-                        result = PC;
-                        break;
-                    }
-                }
-            }
-            else if (entity instanceof EnemyCharacter) {
-                CharacterEntity EC = (CharacterEntity) entity;
-                if (EC.getID() == CharEntityID) {
-                    result = EC;
-                    break;
+        for(GameEntity entity: _gameEntities) {
+            if (entity instanceof PlayerCharacter) {
+                PlayerCharacter PC = (PlayerCharacter) entity;
+                if (PC.getID() == id) {
+                    return PC;
                 }
             }
         }
-        return result;
+        return null;
     }
-    private BackgroundEntity getBg()
+    private EnemyCharacter getEnemyEntity(int id)
     {
-        for(GameEntity entity: _gameEntities)
-        {
-            if(entity instanceof BackgroundEntity)
-            {
-                return (BackgroundEntity) entity;
+        for(GameEntity entity: _gameEntities) {
+            if (entity instanceof EnemyCharacter) {
+                EnemyCharacter EC = (EnemyCharacter) entity;
+                if (EC.getID() == id) {
+                    return EC;
+                }
             }
         }
         return null;
@@ -206,12 +204,10 @@ public class MainGameScene extends GameScene {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_CANCEL:
                 if (pointerID == joystick.pointerID)
                 {
-                    joystick.show = false;
-                    joystick.resetActuator();
-                    joystick.setPressed(false);
-                    joystick.pointerID = -1;
+                   joystick.resetJoystick();
                     System.out.println("joystick up " + pointerID);
                 }
                 else if(pointerID == jumpButton.pointerID)
@@ -229,19 +225,47 @@ public class MainGameScene extends GameScene {
                     System.out.println("switchBtn up " + pointerID);
                 }
                 break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
+        }
+        touchChecks(event);
+    }
+
+    public void touchChecks(MotionEvent event)
+    {
+        boolean leftSideTouched = false;
+        boolean rightSideTouched = false;
+
+        int i = 0;
+
+        while (i < event.getPointerCount()) {
+            float x = event.getX(i);
+
+            if (x < screenWidth * 0.5f)
+            {
+                leftSideTouched = true;
+            }
+            if (x > screenWidth * 0.5f) {
+                rightSideTouched = true;
+            }
+            i++;
         }
 
+        if (!leftSideTouched)
+        {
+            // LEFT SIDE HAS NO INPUT
+            joystick.resetJoystick();
+        }
+        if(!rightSideTouched)
+        {
+            jumpButton.reset();
+        }
     }
 
     @Override
     public void onUpdate(float dt)
     {
         //get player
-        PlayerCharacter chosenChar = (PlayerCharacter) getCharacterEntity(1, true);
+        PlayerCharacter chosenChar = getPlayerEntity(0);
         assert chosenChar != null;
-
 
         MainCam.setTarget(chosenChar);
 
@@ -251,16 +275,38 @@ public class MainGameScene extends GameScene {
 
         if(switchButton.toggled) //fire mode
         {
+            float turnSpeed = 0.1f;
+            float facingAngle = chosenChar.getAimAngle();
+
             chosenChar.stopMovement();
             chosenChar.setMovementDir(new Vector2(0,0));
-            if(joystick.isPressed())
+            if (joystick.isPressed()) {
+                float inputX = joystick.actuatorValues.x;
+
+                chosenChar.setAimAngle(facingAngle - inputX * turnSpeed * dt);
+
+                // Wrap angle
+                if (facingAngle > Math.PI)
+                {
+                    chosenChar.setAimAngle(facingAngle - (float)(2 * Math.PI));
+                }
+                if (facingAngle < -Math.PI)
+                {
+                    chosenChar.setAimAngle(facingAngle + (float)(2 * Math.PI));
+                }
+
+                // Convert angle → direction
+                chosenChar.setAimDir(new Vector2( (float)Math.cos(facingAngle), (float)Math.sin(facingAngle)));
+
+            }
+            if(jumpButton.isPressed(jumpButton.pointerID))
             {
-                chosenChar.setAimDir(joystick.actuatorValues);
+                chosenChar.getWeapon(0).Shoot(_gameEntities);
             }
         }
         else //move mode
         {
-            chosenChar.setMovementDir(joystick.actuatorValues);
+            chosenChar.setMovementDir(new Vector2(joystick.actuatorValues.x, 0));
 
             if(jumpButton.isPressed(jumpButton.pointerID) && chosenChar.onGround)
             {
@@ -268,15 +314,10 @@ public class MainGameScene extends GameScene {
             }
         }
 
-        for(GameEntity entity: _gameEntities)
-            entity.onUpdate(dt);
-
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < _playerEntities.size(); i++)
         {
-            PlayerCharacter pc = (PlayerCharacter) getCharacterEntity(i, true);
+            PlayerCharacter pc = getPlayerEntity(i);
             assert pc != null;
-            EnemyCharacter ec = (EnemyCharacter) getCharacterEntity(i, false);
-            assert ec != null;
 
             Ground ground = getGround();
             assert ground != null;
@@ -321,6 +362,14 @@ public class MainGameScene extends GameScene {
             {
                 pc.onGround = false;
             }
+        }
+        for(int i = 0; i < _enemyEntities.size(); i++)
+        {
+            EnemyCharacter ec = getEnemyEntity(i);
+            assert ec != null;
+
+            Ground ground = getGround();
+            assert ground != null;
 
             if(CollisionDetection.OverlapCircleToAABB(ec, ground))
             {
@@ -362,17 +411,23 @@ public class MainGameScene extends GameScene {
                 ec.onGround = false;
             }
         }
+
+        for(GameEntity entity: _gameEntities) {
+            if (entity.canDestroy())
+                continue;
+            entity.onUpdate(dt);
+        }
     }
 
     @Override
     public void onRender(Canvas canvas)
     {
-        for(GameEntity entity: _gameEntities)
-        {
-            if(entity.show)
-            {
-                entity.onRender(canvas);
-            }
+        for(GameEntity entity: _gameEntities) {
+            if (entity.canDestroy() || !entity.show)
+                continue;
+
+            entity.onRender(canvas);
+
         }
     }
 }
