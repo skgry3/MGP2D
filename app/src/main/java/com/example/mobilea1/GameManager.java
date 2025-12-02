@@ -8,6 +8,7 @@ import com.example.mobilea1.Entities.CharacterEntity;
 import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Entities.Ground;
 import com.example.mobilea1.Entities.PlayerCharacter;
+import com.example.mobilea1.Inputs.InputManager;
 import com.example.mobilea1.Physics.CollisionDetection;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -24,6 +25,13 @@ public class GameManager {
     private GameManager()
     {
         LoadGame();
+    }
+    private static class BillPughSingleton {
+        private static final GameManager INSTANCE = new GameManager();
+    }
+    public static GameManager getInstance()
+    {
+        return BillPughSingleton.INSTANCE;
     }
     private void LoadGame()
     {
@@ -119,28 +127,27 @@ public class GameManager {
         }
         return null;
     }
-    private static class BillPughSingleton {
-        private static final GameManager INSTANCE = new GameManager();
-    }
-    public static GameManager getInstance()
-    {
-        return BillPughSingleton.INSTANCE;
-    }
     public void gameUpdate(float dt) {
 
         //get which char turn
         CharacterEntity current = TBS.getCurrentEntity();
+
+        //no more char alive
+        if(current == null)
+            return;
+
         //died during turn
         if(!current.alive)
         {
             TBS.actionCompleted(true);
-
         }
+
         //handle player logic
         if(current.isPlayer) {
             PlayerCharacter chosenPlayer = (PlayerCharacter) current;
             chosenPlayer.actions(dt);
         }
+
         //handle enemy logic
         else if(current.isEnemy){
             EnemyCharacter chosenEnemy = (EnemyCharacter) current;

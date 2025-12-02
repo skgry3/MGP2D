@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 //import com.example.mobilea1.mgp2dCore.other.AnimatedSprite;
 
 import com.example.mobilea1.GameManager;
-import com.example.mobilea1.InputManager;
+import com.example.mobilea1.Inputs.InputManager;
 import com.example.mobilea1.R;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.Vector2;

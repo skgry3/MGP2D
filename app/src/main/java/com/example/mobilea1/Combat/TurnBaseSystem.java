@@ -59,6 +59,8 @@ public class TurnBaseSystem{
         nextTurn();
     }
     public CharacterEntity getCurrentEntity() {
+        if(orderedEntities.isEmpty())
+            return null;
         return orderedEntities.get(index);
     }
     private void nextTurn() {
@@ -103,13 +105,6 @@ public class TurnBaseSystem{
     private void resolvePostAction() {
         // Remove dead entities
         orderedEntities.removeIf(ce -> !ce.alive);
-
-        System.out.println("---------------------------------------------------------------------------------------");
-        for(CharacterEntity e: orderedEntities)
-        {
-            System.out.println(e.name);
-        }
-        System.out.println("---------------------------------------------------------------------------------------");
 
         if (playerCharacters.stream().noneMatch(ce -> ce.alive)) {
             state = GameState.GAME_OVER;

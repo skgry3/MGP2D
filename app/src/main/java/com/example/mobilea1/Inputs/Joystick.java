@@ -1,4 +1,4 @@
-package com.example.mobilea1.UI;
+package com.example.mobilea1.Inputs;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

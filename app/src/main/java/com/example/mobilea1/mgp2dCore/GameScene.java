@@ -8,6 +8,27 @@ public abstract class GameScene {
 
     // region Static props for managing multiple scenes
 
+    //my stuff
+    protected boolean isPaused = false;
+    private long pauseStartTime = 0;
+    private long lastUpdateTime = 0;
+
+    public void pauseGame(){
+        if(isPaused) return;
+        isPaused = true;
+        pauseStartTime = System.currentTimeMillis();
+    }
+    public void resumeGame(){
+        if(!isPaused) return;
+        isPaused = false;
+
+        long now = System.currentTimeMillis();
+        long pausedDuration = now - pauseStartTime;
+
+        lastUpdateTime += pausedDuration; //reset dt;
+    }
+    //
+
     private static GameScene _current = null;
 
     private static GameScene _next = null;

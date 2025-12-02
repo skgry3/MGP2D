@@ -3,15 +3,14 @@ package com.example.mobilea1.Scenes;
 
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 
 import com.example.mobilea1.Camera;
 
 import com.example.mobilea1.Entities.BackgroundEntity;
 import com.example.mobilea1.GameManager;
-import com.example.mobilea1.InputManager;
+import com.example.mobilea1.Inputs.InputManager;
 
+import com.example.mobilea1.Outputs.TextManager;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.GameScene;
@@ -29,6 +28,7 @@ public class MainGameScene extends GameScene {
     Camera MainCam;
     GameManager gm;
     InputManager im;
+    TextManager tm;
 
     @Override
     public void onCreate()
@@ -52,6 +52,7 @@ public class MainGameScene extends GameScene {
 
         gm = GameManager.getInstance();
         im = InputManager.getInstance();
+        tm = TextManager.getInstance();
     }
 
     @Override
@@ -83,6 +84,8 @@ public class MainGameScene extends GameScene {
         }
 
         gm.handleCollisions();
+
+        tm.update(dt);
     }
 
     @Override
@@ -90,10 +93,6 @@ public class MainGameScene extends GameScene {
     {
         if(!gm.isLoaded())
         {
-            Paint p = new Paint();
-            p.setColor(Color.WHITE);
-            p.setTextSize(80);
-            canvas.drawText("Loading...", 200, 200, p);
             return;
         }
         for(BackgroundEntity entity: _bgEntities) {
@@ -103,5 +102,6 @@ public class MainGameScene extends GameScene {
         }
         gm.render(canvas);
         im.render(canvas);
+        tm.render(canvas);
     }
 }

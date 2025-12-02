@@ -1,10 +1,8 @@
-package com.example.mobilea1;
+package com.example.mobilea1.Inputs;
 
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-import com.example.mobilea1.UI.Button;
-import com.example.mobilea1.UI.Joystick;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
