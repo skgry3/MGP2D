@@ -1,13 +1,14 @@
 package com.example.mobilea1.Combat;
 
 import com.example.mobilea1.Entities.CharacterEntity;
+import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Entities.PlayerCharacter;
-import com.example.mobilea1.mgp2dCore.GameEntity;
 
 import java.util.Vector;
 
-public class TurnBaseSystem {
+public class TurnBaseSystem{
 
+    int turns;
     public enum GameState {
         PLAYER_TURN,
         ENEMY_TURN,
@@ -19,23 +20,61 @@ public class TurnBaseSystem {
         return state;
     }
     private GameState state = GameState.PLAYER_TURN;
-    private Vector<CharacterEntity> characterEntities;
-    private int index = -1;   // start before 0 so first call goes to 0
+    private final Vector<PlayerCharacter> playerCharacters = new Vector<>();
+    private final Vector<EnemyCharacter> enemyCharacters = new Vector<>();
+    private final Vector<CharacterEntity> orderedEntities = new Vector<>();
+    private int index;   // start before 0 so first call goes to 0
 
-    public TurnBaseSystem(Vector<CharacterEntity> CE) {
-        this.characterEntities = CE;
-        nextTurn();
+    private TurnBaseSystem() {
+        turns = 0;
+        index = 0;
+    }
+    private static class BillPughSingleton{
+        private static final TurnBaseSystem INSTANCE = new TurnBaseSystem();
+    }
+    public static TurnBaseSystem getInstance()
+    {
+        return BillPughSingleton.INSTANCE;
     }
 
-    private void nextTurn() {
-        do {
-            index = (index + 1) % characterEntities.size();
+    public void initialise(Vector<CharacterEntity> CE)
+    {
+        for(CharacterEntity ce: CE)
+        {
+            if(ce instanceof PlayerCharacter)
+            {
+                playerCharacters.add((PlayerCharacter) ce);
+            }
+            else
+            {
+                enemyCharacters.add((EnemyCharacter) ce);
+            }
         }
-        while (!characterEntities.get(index).alive);
+        for(int i = 0; i < CE.size()/2; i++)
+        {
+            orderedEntities.add(playerCharacters.get(i));
+            orderedEntities.add(enemyCharacters.get(i));
+        }
+        index = -1;
+        nextTurn();
+    }
+    public CharacterEntity getCurrentEntity() {
+        return orderedEntities.get(index);
+    }
+    private void nextTurn() {
+        if(orderedEntities.isEmpty())
+            return;
 
-        CharacterEntity characterEntity = characterEntities.get(index);
+        do {
+            index = (index + 1) % orderedEntities.size();
+        }
+        while (!orderedEntities.get(index).alive);
 
-        if (characterEntity instanceof PlayerCharacter) {
+        CharacterEntity characterEntity = orderedEntities.get(index);
+
+        System.out.println(state.name());
+
+        if (characterEntity.isPlayer) {
             state = GameState.PLAYER_TURN;
         } else {
             state = GameState.ENEMY_TURN;
@@ -44,33 +83,41 @@ public class TurnBaseSystem {
         System.out.println("Turn: " + characterEntity.name);
         characterEntity.onTurnStart();
     }
-
-    public void actionCompleted(CharacterEntity CE) {
+    public void actionCompleted(boolean died) {
 
         if (state == GameState.GAME_OVER)
             return;
 
+        if(died)
+            index--;
+
         // Enter resolution state
         state = GameState.RESOLVING;
-
+        System.out.println(state.name());
         // Run cleanup or animations here
-        resolvePostAction(CE);
+        resolvePostAction();
 
         // Continue to next turn
         nextTurn();
     }
-
-    private void resolvePostAction(CharacterEntity CE) {
+    private void resolvePostAction() {
         // Remove dead entities
-        characterEntities.removeIf(ce -> !ce.alive);
+        orderedEntities.removeIf(ce -> !ce.alive);
 
-        if (characterEntities.stream().noneMatch(characterEntity -> characterEntity.isPlayer)) {
+        System.out.println("---------------------------------------------------------------------------------------");
+        for(CharacterEntity e: orderedEntities)
+        {
+            System.out.println(e.name);
+        }
+        System.out.println("---------------------------------------------------------------------------------------");
+
+        if (playerCharacters.stream().noneMatch(ce -> ce.alive)) {
             state = GameState.GAME_OVER;
             System.out.println("Enemies win!");
             return;
         }
 
-        if (characterEntities.stream().noneMatch(characterEntity -> characterEntity.isEnemy)) {
+        if (enemyCharacters.stream().noneMatch(ce -> ce.alive)) {
             state = GameState.GAME_OVER;
             System.out.println("Players win!");
             return;

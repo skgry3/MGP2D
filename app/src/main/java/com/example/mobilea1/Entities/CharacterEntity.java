@@ -19,6 +19,7 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
     public boolean onGround;
     public String name = "name";
     public boolean alive;
+    public boolean chosen;
     protected int ID;
     public boolean isPlayer;
     public boolean isEnemy;
@@ -41,6 +42,7 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
         _position = new Vector2(0,0);
         isPlayer = false;
         isEnemy = false;
+        chosen = false;
     }
     public void onCreate()
     {
@@ -97,6 +99,11 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
         for(WeaponBase weapon : _weapons)
         {
             weapon.onUpdate(dt);
+        }
+
+        if(_position.y > 10)
+        {
+            die();
         }
     }
 
