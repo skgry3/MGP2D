@@ -2,6 +2,8 @@ package com.example.mobilea1;
 
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.example.mobilea1.Combat.TurnBaseSystem;
 import com.example.mobilea1.Entities.CharacterEntity;
@@ -9,6 +11,9 @@ import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Entities.Ground;
 import com.example.mobilea1.Entities.PlayerCharacter;
 import com.example.mobilea1.Inputs.InputManager;
+import com.example.mobilea1.Outputs.HealthText;
+import com.example.mobilea1.Outputs.NameText;
+import com.example.mobilea1.Outputs.TextManager;
 import com.example.mobilea1.Physics.CollisionDetection;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -71,6 +76,10 @@ public class GameManager {
             {
                 _charEntities.add((CharacterEntity) e);
                 ((CharacterEntity) e).onCreate();
+
+                TextManager.getInstance()._textEntities.add(new HealthText((CharacterEntity) e,50, Color.BLACK, Paint.Align.CENTER, false));
+                TextManager.getInstance()._textEntities.add(new NameText((CharacterEntity) e,50, ((CharacterEntity) e).isPlayer? Color.GREEN: Color.RED, Paint.Align.CENTER, false));
+
             }
         }
 

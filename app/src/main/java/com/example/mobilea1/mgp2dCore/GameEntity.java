@@ -54,14 +54,6 @@ public abstract class GameEntity {
     {
         if(isUI)
             return;
-
-        if(facingDir.x < 0)
-        {
-            flip = -1;
-        }
-        else {
-            flip = 1;
-        }
         if(show) {
             _renderPosition.x = _position.x - (getSize().x * 0.5f) - Camera.getOffset().x;
             _renderPosition.y = _position.y - (getSize().y * 0.5f) - Camera.getOffset().y;

@@ -18,14 +18,14 @@ public class SMG extends RaycastWeapon {
     public SMG(CharacterEntity Owner) {
         owner = Owner;
         name = "SMG";
-        size = new Vector2(75, 25);
+        size = new Vector2(50,50);
         dmg = 10f;
         range = 500f;
         sprayAmt = 5;
         sprayDeg = 5f;
         shot = false;
 
-        Bitmap spriteBmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.illegelhowchien);
+        Bitmap spriteBmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.vectorsmg);
         sprite = Bitmap.createScaledBitmap(spriteBmp, (int) size.x, (int) size.y, true);
     }
 

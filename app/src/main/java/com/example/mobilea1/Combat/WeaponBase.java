@@ -100,7 +100,7 @@ public abstract class WeaponBase extends GameEntity {
         Vector2 ownerPos = owner.getPosition();
         facingDir = owner.getAimDir();
         _rotationDeg = (float) Math.toDegrees(owner.getAimAngle());
-        _position = new Vector2( ownerPos.x + facingDir.x , ownerPos.y + facingDir.y );
+        _position = new Vector2( ownerPos.x , ownerPos.y );
         super.onUpdate(dt);
     }
 

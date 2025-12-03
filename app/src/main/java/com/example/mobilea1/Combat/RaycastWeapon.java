@@ -34,7 +34,7 @@ public class RaycastWeapon extends WeaponBase{
             if (hit.target instanceof CharacterEntity) {
                 CharacterEntity hitTarget = (CharacterEntity) hit.target;
                 hitTarget.takeDmg(dmg);
-                TextManager.getInstance()._textEntities.add(new DmgNum(dmg, hit.point, 50, Color.RED, Paint.Align.CENTER, false));
+                TextManager.getInstance()._textEntities.add(new DmgNum((int) dmg, hit.point, 50, Color.RED, Paint.Align.CENTER, false));
                 System.out.println("hit " + hitTarget.name + " for " + dmg);
             }
             if(hit.target instanceof Ground)
@@ -47,8 +47,8 @@ public class RaycastWeapon extends WeaponBase{
     @Override
     public void onUpdate(float dt) {
 
-        float p0_x = _position.x - size.x * 0.5f;
-        float p0_y = _position.y - size.y * 0.5f;
+        float p0_x = _position.x;
+        float p0_y = _position.y;
 
         Vector2 dir = owner.getAimDir().normalize();
 

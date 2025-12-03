@@ -69,6 +69,14 @@ public class PhysicObj extends GameEntity {
         _position.y +=  VerticalVel * dt ;
         _position.x +=  HorizontalVel * dt;
 
+        if(HorizontalVel > 0)
+        {
+            flip = 1;
+        }
+        else {
+            flip = -1;
+        }
+
         super.onUpdate(dt);
     }
 

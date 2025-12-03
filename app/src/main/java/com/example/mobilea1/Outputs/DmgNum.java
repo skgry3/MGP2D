@@ -6,11 +6,11 @@ import android.graphics.Paint;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class DmgNum extends Text{
-    float num;
+    int num;
     float lifetime = 2f;
     float lifetimer;
     float ranXDiff;
-    public DmgNum(float Num, Vector2 pos, float textSize, int color, Paint.Align align, boolean isui) {
+    public DmgNum(int Num, Vector2 pos, float textSize, int color, Paint.Align align, boolean isui) {
         super(pos, textSize, color, align, isui);
 
         ranXDiff = textSize * 4;

@@ -16,7 +16,7 @@ public class Ground extends GameEntity
     {
         size = groundSize;
 
-        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsley);
+        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.ground);
         sprite = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);
     }
 

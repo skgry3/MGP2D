@@ -16,7 +16,7 @@ public class BackgroundEntity extends GameEntity {
 
     public BackgroundEntity(Vector2 Size) {
         size = Size;
-        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.illegelhowchien);
+        Bitmap bmp = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.background1);
         _backgroundBitmap0 = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);
 
 

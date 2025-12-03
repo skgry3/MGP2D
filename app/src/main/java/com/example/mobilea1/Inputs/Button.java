@@ -30,8 +30,8 @@ public class Button extends GameEntity
        _position = position;
        radius = Radius;
 
-        Bitmap bmpPressed = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsley);
-        Bitmap bmpUnpressed = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsleypeach);
+        Bitmap bmpPressed = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.press);
+        Bitmap bmpUnpressed = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.unpress);
         PressedSprite = Bitmap.createScaledBitmap(bmpPressed, radius * 2, radius * 2, true);
         UnpressedSprite = Bitmap.createScaledBitmap(bmpUnpressed, radius * 2, radius * 2, true);
 

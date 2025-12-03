@@ -4,8 +4,6 @@ package com.example.mobilea1.Scenes;
 
 import android.graphics.Canvas;
 
-import com.example.mobilea1.Camera;
-
 import com.example.mobilea1.CameraManager;
 import com.example.mobilea1.Entities.BackgroundEntity;
 import com.example.mobilea1.GameManager;

@@ -29,8 +29,8 @@ public class Joystick extends GameEntity {
         this.outerCircleRadius = outerCircleR;
         this.innerCircleRadius = innerCircleR;
 
-        Bitmap bmpIn = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsley);
-        Bitmap bmpOut = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.kingsleypeach);
+        Bitmap bmpIn = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.unpress);
+        Bitmap bmpOut = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.press);
         innerSprite = Bitmap.createScaledBitmap(bmpIn, innerCircleR * 2, innerCircleR *2, true);
         outerSprite = Bitmap.createScaledBitmap(bmpOut, outerCircleR *2, outerCircleR *2, true);
 
