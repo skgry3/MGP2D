@@ -3,44 +3,33 @@ package com.example.mobilea1.Outputs;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class Text extends GameEntity {
-    private final Paint _paint;
-    private int _screenWidth;
-    private int _screenHeight;
-    private int _frameCount;
-    private long _lastTime;
-    private float _fps;
+    protected final Paint _paint;
 
-    Text(int color) {
+    Text(Vector2 pos, float textSize, int color, Paint.Align align, boolean isui) {
         _paint = new Paint();
         _paint.setColor(color);
-        _paint.setTextSize(75);
-        _paint.setTextAlign(Paint.Align.RIGHT);
-        _screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
-        _screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
-        _position = new Vector2(_screenWidth * 0.5f, 75);
+        _paint.setTextSize(textSize);
+        _paint.setTextAlign(align);
+        _position = pos.copy();
         size = new Vector2(0,0);
+        isUI = isui;
+
+        Paint.FontMetrics fm = _paint.getFontMetrics();
+        float textHeight = Math.abs(fm.top);
+        _position = new Vector2( _position.x, _position.y + textHeight);
     }
 
     @Override
     public void onUpdate(float dt) {
         super.onUpdate(dt);
-        _frameCount++;
-        long currentTime = System.currentTimeMillis();
-        if(currentTime - _lastTime > 1000) {
-            _fps = (_frameCount * 1000.f) / (currentTime - _lastTime);
-            _lastTime = currentTime;
-            _frameCount = 0;
-        }
     }
 
     @Override
     public void onRender(Canvas canvas) {
-        canvas.drawText("FPS: " + (int)_fps, _position.x, _position.y, _paint);
     }
 
 }

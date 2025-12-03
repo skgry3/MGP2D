@@ -40,6 +40,7 @@ public class MainGameScene extends GameScene {
 
         super.onCreate();
         _cameraEntities.add(MainCam);
+        MainCam.isUI = false;
         _bgEntities.add(new BackgroundEntity(mapSize));
 
         for(BackgroundEntity entity: _bgEntities)
@@ -47,25 +48,25 @@ public class MainGameScene extends GameScene {
             entity.show = true;
             entity.active = true;
             entity.ignoreRaycast = true;
+            entity.isUI = false;
         }
 
-
+        tm = TextManager.getInstance();
         gm = GameManager.getInstance();
         im = InputManager.getInstance();
-        tm = TextManager.getInstance();
+
     }
 
     @Override
     public void onUpdate(float dt)
     {
+        im.update(dt);
         if(!gm.isLoaded()) return;
 
-        im.update(dt);
         //handle touch
         InputManager.getInstance().handleTouch();
 
         gm.gameUpdate(dt);
-
         //lock cam on target
         MainCam.setTarget(gm.getTBSInstance().getCurrentEntity());
 
@@ -83,25 +84,21 @@ public class MainGameScene extends GameScene {
             entity.onUpdate(dt);
         }
 
-        gm.handleCollisions();
-
         tm.update(dt);
     }
 
     @Override
     public void onRender(Canvas canvas)
     {
-        if(!gm.isLoaded())
-        {
-            return;
+        if(gm.isLoaded()) {
+            for (BackgroundEntity entity : _bgEntities) {
+                if (entity.canDestroy() || !entity.show)
+                    continue;
+                entity.onRender(canvas);
+            }
+            gm.render(canvas);
+            im.render(canvas);
         }
-        for(BackgroundEntity entity: _bgEntities) {
-            if (entity.canDestroy() || !entity.show)
-                continue;
-            entity.onRender(canvas);
-        }
-        gm.render(canvas);
-        im.render(canvas);
         tm.render(canvas);
     }
 }

@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import com.example.mobilea1.Camera;
 import com.example.mobilea1.Entities.CharacterEntity;
 import com.example.mobilea1.Entities.Ground;
+import com.example.mobilea1.Outputs.DmgNum;
+import com.example.mobilea1.Outputs.TextManager;
 import com.example.mobilea1.Physics.Raycast;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -32,6 +34,7 @@ public class RaycastWeapon extends WeaponBase{
             if (hit.target instanceof CharacterEntity) {
                 CharacterEntity hitTarget = (CharacterEntity) hit.target;
                 hitTarget.takeDmg(dmg);
+                TextManager.getInstance()._textEntities.add(new DmgNum(dmg, hit.point, 50, Color.RED, Paint.Align.CENTER, false));
                 System.out.println("hit " + hitTarget.name + " for " + dmg);
             }
             if(hit.target instanceof Ground)

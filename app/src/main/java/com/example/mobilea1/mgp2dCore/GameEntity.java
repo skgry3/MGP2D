@@ -5,8 +5,9 @@ import android.graphics.Canvas;
 import com.example.mobilea1.Camera;
 
 public abstract class GameEntity {
-    protected Vector2 size;
-    public Vector2 getSize(){ return size;}
+    public boolean isUI = false;
+    protected Vector2 size = new Vector2(0,0);
+    public Vector2 getSize(){ return size.copy();}
     public boolean show = false;
     public boolean active = false;
     protected Vector2 _position = new Vector2(0, 0);
@@ -45,13 +46,15 @@ public abstract class GameEntity {
     protected int _ordinal = 0;
     public int getOrdinal() { return _ordinal; }
     public boolean ignoreRaycast = false;
-
     private boolean _isDone = false;
     public void destroy() { _isDone = true; }
     public boolean canDestroy() { return _isDone; }
 
     public void onUpdate(float dt)
     {
+        if(isUI)
+            return;
+
         if(facingDir.x < 0)
         {
             flip = -1;

@@ -34,6 +34,7 @@ public class InputManager {
             e.show = true;
             e.active = true;
             e.ignoreRaycast = true;
+            e.isUI = true;
         }
     }
 

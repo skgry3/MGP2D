@@ -9,6 +9,7 @@ import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Entities.Ground;
 import com.example.mobilea1.Entities.PlayerCharacter;
 import com.example.mobilea1.Inputs.InputManager;
+import com.example.mobilea1.Outputs.TextManager;
 import com.example.mobilea1.Physics.CollisionDetection;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -33,8 +34,11 @@ public class GameManager {
     {
         return BillPughSingleton.INSTANCE;
     }
+    private float waitTime;
     private void LoadGame()
     {
+        waitTime = 3f;
+
         TBS = TurnBaseSystem.getInstance();
         im = InputManager.getInstance();
 
@@ -45,16 +49,15 @@ public class GameManager {
         float groundLeftX = ground.getPosition().x - ground.getSize().x * 0.5f;
         float groundRightX = ground.getPosition().x + ground.getSize().x * 0.5f;
 
-
         for (int i = 0; i < 3; i++) {
             float ranPX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
-            float spawnY = groundTopY - characterSize.y / 2f;
+            float spawnY = groundTopY - characterSize.y * 2;
             _gameEntities.add(new PlayerCharacter(characterSize, i, "MQQ" + (i+1), new Vector2(ranPX, spawnY), this));
         }
 
         for (int i = 0; i < 3; i++) {
             float ranEX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
-            float spawnY = groundTopY - characterSize.y / 2f;
+            float spawnY = groundTopY - characterSize.y * 2;
             _gameEntities.add(new EnemyCharacter(characterSize, i, "Witz" + (i+1), new Vector2(ranEX, spawnY), this));
         }
 
@@ -63,6 +66,7 @@ public class GameManager {
             e.show = true;
             e.active = true;
             e.ignoreRaycast = false;
+            e.isUI = false;
 
             if(e instanceof CharacterEntity)
             {
@@ -77,8 +81,8 @@ public class GameManager {
         isLoaded = true;
     }
     private float randomXOnGround(float groundLeft, float groundRight, float charWidth) {
-        float minX = groundLeft + charWidth * 0.5f;
-        float maxX = groundRight - charWidth * 0.5f;
+        float minX = groundLeft + charWidth * 2;
+        float maxX = groundRight - charWidth * 2;
         return minX + (float)Math.random() * (maxX - minX);
     }
 
@@ -129,29 +133,38 @@ public class GameManager {
     }
     public void gameUpdate(float dt) {
 
-        //get which char turn
-        CharacterEntity current = TBS.getCurrentEntity();
-
-        //no more char alive
-        if(current == null)
+        if(waitTime > 0) {
+            waitTime -= dt;
             return;
-
-        //died during turn
-        if(!current.alive)
-        {
-            TBS.actionCompleted(true);
         }
 
-        //handle player logic
-        if(current.isPlayer) {
-            PlayerCharacter chosenPlayer = (PlayerCharacter) current;
-            chosenPlayer.actions(dt);
+        if(TBS.getState() == TurnBaseSystem.GameState.RESOLVING) {
+           TBS.actionResult(dt);
         }
+        else {
+            //get which char turn
+            CharacterEntity current = TBS.getCurrentEntity();
 
-        //handle enemy logic
-        else if(current.isEnemy){
-            EnemyCharacter chosenEnemy = (EnemyCharacter) current;
-            chosenEnemy.runAI(dt);
+            //no more char alive
+            if (current == null)
+                return;
+
+            //died during turn
+            if (!current.alive) {
+                TBS.actionCompleted(true);
+            }
+
+            //handle player logic
+            if (current.isPlayer) {
+                PlayerCharacter chosenPlayer = (PlayerCharacter) current;
+                chosenPlayer.actions(dt);
+            }
+
+            //handle enemy logic
+            else if (current.isEnemy) {
+                EnemyCharacter chosenEnemy = (EnemyCharacter) current;
+                chosenEnemy.runAI(dt);
+            }
         }
 
         for(GameEntity e: _gameEntities)
@@ -160,6 +173,7 @@ public class GameManager {
                 continue;
             e.onUpdate(dt);
         }
+        handleCollisions();
     }
     public void handleCollisions()
     {
