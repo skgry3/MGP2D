@@ -9,7 +9,6 @@ import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Entities.Ground;
 import com.example.mobilea1.Entities.PlayerCharacter;
 import com.example.mobilea1.Inputs.InputManager;
-import com.example.mobilea1.Outputs.TextManager;
 import com.example.mobilea1.Physics.CollisionDetection;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -144,7 +143,7 @@ public class GameManager {
         else {
             //get which char turn
             CharacterEntity current = TBS.getCurrentEntity();
-
+            CameraManager.getInstance().getMainCam().setTarget(current);
             //no more char alive
             if (current == null)
                 return;

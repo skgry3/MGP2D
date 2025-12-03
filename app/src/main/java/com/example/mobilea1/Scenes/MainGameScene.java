@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 
 import com.example.mobilea1.Camera;
 
+import com.example.mobilea1.CameraManager;
 import com.example.mobilea1.Entities.BackgroundEntity;
 import com.example.mobilea1.GameManager;
 import com.example.mobilea1.Inputs.InputManager;
@@ -25,7 +26,8 @@ public class MainGameScene extends GameScene {
     float screenWidth;
     float screenHeight;
     Vector2 mapSize = new Vector2(5000,5000);
-    Camera MainCam;
+
+    CameraManager cm;
     GameManager gm;
     InputManager im;
     TextManager tm;
@@ -36,11 +38,7 @@ public class MainGameScene extends GameScene {
         screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
-        MainCam = new Camera();
-
         super.onCreate();
-        _cameraEntities.add(MainCam);
-        MainCam.isUI = false;
         _bgEntities.add(new BackgroundEntity(mapSize));
 
         for(BackgroundEntity entity: _bgEntities)
@@ -51,6 +49,7 @@ public class MainGameScene extends GameScene {
             entity.isUI = false;
         }
 
+        cm = CameraManager.getInstance();
         tm = TextManager.getInstance();
         gm = GameManager.getInstance();
         im = InputManager.getInstance();
@@ -63,12 +62,11 @@ public class MainGameScene extends GameScene {
         im.update(dt);
         if(!gm.isLoaded()) return;
 
+        cm.update(dt);
         //handle touch
         InputManager.getInstance().handleTouch();
 
         gm.gameUpdate(dt);
-        //lock cam on target
-        MainCam.setTarget(gm.getTBSInstance().getCurrentEntity());
 
         //entity updates
         for(GameEntity entity: _cameraEntities) {

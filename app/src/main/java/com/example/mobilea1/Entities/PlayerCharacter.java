@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 
 //import com.example.mobilea1.mgp2dCore.other.AnimatedSprite;
 
+import com.example.mobilea1.Camera;
+import com.example.mobilea1.CameraManager;
 import com.example.mobilea1.GameManager;
 import com.example.mobilea1.Inputs.InputManager;
 import com.example.mobilea1.R;
@@ -45,6 +47,8 @@ public class PlayerCharacter extends CharacterEntity {
             stopMovement();
             setMovementDir(new Vector2(0, 0));
             if (im.getJoystick().isPressed()) {
+
+                CameraManager.getInstance().getMainCam().setMode(Camera.CamMode.FOLLOW_PLAYER);
                 float inputX = im.getJoystick().actuatorValues.x;
 
                 setAimAngle(facingAngle - inputX * turnSpeed * dt);
@@ -69,6 +73,10 @@ public class PlayerCharacter extends CharacterEntity {
         } else //move mode
         {
             setMovementDir(new Vector2(im.getJoystick().actuatorValues.x, 0));
+
+            if (im.getJoystick().isPressed()) {
+                CameraManager.getInstance().getMainCam().setMode(Camera.CamMode.FOLLOW_PLAYER);
+            }
 
             if (im.getJumpButton().isPressed(im.getJumpButton().pointerID) && onGround) {
                 Jump();
