@@ -135,7 +135,7 @@ public class PlayerCharacter extends CharacterEntity {
                 changeAnimation(animatedSpriteJumpUp);
             }
         } else { // Is on the ground
-            if (Math.abs(HorizontalVel) > 1) { // Is running
+            if (Math.abs(HorizontalVel) > 50) { // Is running
                 changeAnimation(animatedSpriteRun);
             } else { // Is idle
                 changeAnimation(animatedSpriteIdle);
@@ -149,8 +149,7 @@ public class PlayerCharacter extends CharacterEntity {
     public void onRender(Canvas canvas)
     {
         canvas.save();
-        canvas.scale(flip, 1, _renderPosition.x + size.x * 0.5f, _renderPosition.y);
-        canvas.drawBitmap(sprite,_renderPosition.x, _renderPosition.y, null);
+        canvas.scale(flip, 1, _renderPosition.x  + size.x * 0.5f, _renderPosition.y);
         chosenAnimation.render(canvas, (int) _renderPosition.x, (int) _renderPosition.y, null);
         canvas.restore();
 

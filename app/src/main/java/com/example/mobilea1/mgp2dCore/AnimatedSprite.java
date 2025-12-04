@@ -59,7 +59,7 @@ public class AnimatedSprite {
         int frameX = _currentFrame % _col;
         int frameY = _currentFrame / _col;
         int srcX = frameX * _width;
-        int srcY = frameY * _height;
+        int srcY = frameY & _height;
 
         _src.left = srcX;
         _src.top = srcY;

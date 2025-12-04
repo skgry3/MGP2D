@@ -50,7 +50,7 @@ public class SMG extends RaycastWeapon {
     public void onRender(Canvas canvas) {
 
         canvas.save();
-        canvas.rotate(_rotationDeg, _renderPosition.x , _renderPosition.y);
+        canvas.rotate(_rotationDeg, _renderPosition.x+ size.x * 0.5f , _renderPosition.y+ size.y * 0.5f);
         canvas.drawBitmap(sprite, _renderPosition.x, _renderPosition.y, null);
         canvas.restore();
         super.onRender(canvas);

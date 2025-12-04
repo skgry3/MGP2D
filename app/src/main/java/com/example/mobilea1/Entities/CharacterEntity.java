@@ -1,5 +1,7 @@
 package com.example.mobilea1.Entities;
 
+import static com.example.mobilea1.Scenes.MainGameScene.mapSize;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -103,7 +105,7 @@ public class CharacterEntity extends PhysicObj implements IDamageable {
             weapon.onUpdate(dt);
         }
 
-        if(_position.y > 10)
+        if(_position.y > mapSize.y * 0.5)
         {
             die();
         }
