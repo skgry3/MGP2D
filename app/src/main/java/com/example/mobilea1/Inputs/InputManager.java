@@ -22,8 +22,8 @@ public class InputManager {
         screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
-        jumpButton = new Button(new Vector2(screenWidth - 200, screenHeight - 200), 100, Button.TYPE.MomentaryPush);
-        switchButton = new Button(new Vector2(screenWidth - 100, screenHeight - 400), 100, Button.TYPE.Toggle);
+        jumpButton = new Button(new Vector2(screenWidth - 400, screenHeight - 200), 100, Button.TYPE.MomentaryPush);
+        switchButton = new Button(new Vector2(screenWidth - 200, screenHeight - 400), 100, Button.TYPE.Toggle);
         joystick = new Joystick(new Vector2(0, 0), 70, 40);
 
         inputEntities.add(jumpButton);

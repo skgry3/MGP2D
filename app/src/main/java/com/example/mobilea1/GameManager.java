@@ -69,12 +69,26 @@ public class GameManager {
         for (int i = 0; i < 3; i++) {
             float ranPX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
             float spawnY = groundTopY - characterSize.y * 2;
+            for(GameEntity entity:_gameEntities)
+            {
+                if(ranPX <= entity.getPosition().x + characterSize.x && ranPX >= entity.getPosition().x - characterSize.x)
+                {
+                    ranPX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
+                }
+            }
             _gameEntities.add(new PlayerCharacter(characterSize, i, _noodleNames.get(i % _noodleNames.size()), new Vector2(ranPX, spawnY), this));
         }
 
         for (int i = 0; i < 3; i++) {
             float ranEX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
             float spawnY = groundTopY - characterSize.y * 2;
+            for(GameEntity entity:_gameEntities)
+            {
+                if(ranEX <= entity.getPosition().x + characterSize.x && ranEX >= entity.getPosition().x - characterSize.x)
+                {
+                    ranEX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
+                }
+            }
             _gameEntities.add(new EnemyCharacter(characterSize, i, _pickleNames.get(i % _pickleNames.size()), new Vector2(ranEX, spawnY), this));
         }
 
@@ -91,7 +105,7 @@ public class GameManager {
                 ((CharacterEntity) e).onCreate();
 
                 TextManager.getInstance()._textEntities.add(new HealthText((CharacterEntity) e,50, Color.BLACK, Paint.Align.CENTER, false));
-                TextManager.getInstance()._textEntities.add(new NameText((CharacterEntity) e,50, ((CharacterEntity) e).isPlayer? Color.GREEN: Color.RED, Paint.Align.CENTER, false));
+                TextManager.getInstance()._textEntities.add(new NameText((CharacterEntity) e,25, ((CharacterEntity) e).isPlayer? Color.GREEN: Color.RED, Paint.Align.CENTER, false));
 
             }
         }

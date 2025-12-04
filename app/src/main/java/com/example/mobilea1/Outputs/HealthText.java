@@ -26,7 +26,7 @@ public class HealthText extends Text{
     @Override
     public void onUpdate(float dt) {
         num = (int) entity.health;
-        _position = new Vector2( entity.getPosition().x, entity.getPosition().y - 100f);
+        _position = new Vector2( entity.getPosition().x, entity.getPosition().y - 50f);
 
         if(num <= 0)
         {
