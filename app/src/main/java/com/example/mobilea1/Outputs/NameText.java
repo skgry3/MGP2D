@@ -22,7 +22,7 @@ public class NameText extends Text{
     @Override
     public void onUpdate(float dt) {
 
-        _position = new Vector2( entity.getPosition().x, entity.getPosition().y - 200f);
+        _position = new Vector2( entity.getPosition().x, entity.getPosition().y - 100f);
 
         if(!entity.alive)
         {

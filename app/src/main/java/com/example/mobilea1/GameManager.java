@@ -1,6 +1,8 @@
 package com.example.mobilea1;
 
 
+import static com.example.mobilea1.Scenes.MainGameScene.mapSize;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -26,6 +28,8 @@ public class GameManager {
     Vector2 characterSize = new Vector2(100,100);
     Vector<GameEntity> _gameEntities = new Vector<>();
     Vector<CharacterEntity> _charEntities = new Vector<>();
+    Vector<String> _noodleNames = new Vector<>();
+    Vector<String> _pickleNames = new Vector<>();
     private boolean isLoaded;
     private GameManager()
     {
@@ -41,12 +45,21 @@ public class GameManager {
     private float waitTime;
     private void LoadGame()
     {
+        _noodleNames.add("Sir Noodle McWiggle");
+        _noodleNames.add("Professor Noodle Thighs");
+        _noodleNames.add("Noodle Von Borkington");
+
+        _pickleNames.add("Captain Pickle Fizz");
+        _pickleNames.add("Pickle McSprinkle");
+        _pickleNames.add("Doctor Pickle Wobbleton");
+
         waitTime = 3f;
 
         TBS = TurnBaseSystem.getInstance();
         im = InputManager.getInstance();
 
-        Ground ground = new Ground(new Vector2(2000,1000));
+        Ground ground = new Ground(new Vector2(2000,200));
+        ground.setPosition(new Vector2(0,(mapSize.y * 0.5f) - (ground.getSize().y * 0.5f)));
         _gameEntities.add(ground);
 
         float groundTopY = ground.getPosition().y - ground.getSize().y * 0.5f;
@@ -56,13 +69,27 @@ public class GameManager {
         for (int i = 0; i < 3; i++) {
             float ranPX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
             float spawnY = groundTopY - characterSize.y * 2;
-            _gameEntities.add(new PlayerCharacter(characterSize, i, "MQQ" + (i+1), new Vector2(ranPX, spawnY), this));
+            for(GameEntity entity:_gameEntities)
+            {
+                if(ranPX <= entity.getPosition().x + characterSize.x && ranPX >= entity.getPosition().x - characterSize.x)
+                {
+                    ranPX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
+                }
+            }
+            _gameEntities.add(new PlayerCharacter(characterSize, i, _noodleNames.get(i % _noodleNames.size()), new Vector2(ranPX, spawnY), this));
         }
 
         for (int i = 0; i < 3; i++) {
             float ranEX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
             float spawnY = groundTopY - characterSize.y * 2;
-            _gameEntities.add(new EnemyCharacter(characterSize, i, "Witz" + (i+1), new Vector2(ranEX, spawnY), this));
+            for(GameEntity entity:_gameEntities)
+            {
+                if(ranEX <= entity.getPosition().x + characterSize.x && ranEX >= entity.getPosition().x - characterSize.x)
+                {
+                    ranEX = randomXOnGround(groundLeftX, groundRightX, characterSize.x);
+                }
+            }
+            _gameEntities.add(new EnemyCharacter(characterSize, i, _pickleNames.get(i % _pickleNames.size()), new Vector2(ranEX, spawnY), this));
         }
 
         for(GameEntity e: _gameEntities)
@@ -78,7 +105,7 @@ public class GameManager {
                 ((CharacterEntity) e).onCreate();
 
                 TextManager.getInstance()._textEntities.add(new HealthText((CharacterEntity) e,50, Color.BLACK, Paint.Align.CENTER, false));
-                TextManager.getInstance()._textEntities.add(new NameText((CharacterEntity) e,50, ((CharacterEntity) e).isPlayer? Color.GREEN: Color.RED, Paint.Align.CENTER, false));
+                TextManager.getInstance()._textEntities.add(new NameText((CharacterEntity) e,25, ((CharacterEntity) e).isPlayer? Color.GREEN: Color.RED, Paint.Align.CENTER, false));
 
             }
         }
@@ -202,6 +229,7 @@ public class GameManager {
                 // Find the smallest move distance
                 float resolveX = 0;
                 float resolveY = 0;
+
                 if (overlapX < overlapY)
                 {
                     if (ce.getPosition().x < ground.getPosition().x)

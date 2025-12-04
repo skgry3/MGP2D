@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 
 import com.example.mobilea1.CameraManager;
 import com.example.mobilea1.Entities.BackgroundEntity;
+import com.example.mobilea1.Entities.ParallaxBgEntity;
 import com.example.mobilea1.GameManager;
 import com.example.mobilea1.Inputs.InputManager;
 
@@ -20,10 +21,11 @@ import java.util.Vector;
 public class MainGameScene extends GameScene {
 
     Vector<GameEntity> _cameraEntities = new Vector<>();
+    Vector<ParallaxBgEntity> _pbgEntities = new Vector<>();
     Vector<BackgroundEntity> _bgEntities = new Vector<>();
     float screenWidth;
     float screenHeight;
-    Vector2 mapSize = new Vector2(5000,5000);
+    public static Vector2 mapSize = new Vector2(2000,1000);
 
     CameraManager cm;
     GameManager gm;
@@ -37,8 +39,21 @@ public class MainGameScene extends GameScene {
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
         super.onCreate();
-        _bgEntities.add(new BackgroundEntity(mapSize));
+        _pbgEntities.add(new ParallaxBgEntity(mapSize, 0));
+        _pbgEntities.add(new ParallaxBgEntity(mapSize, 1));
+        _pbgEntities.add(new ParallaxBgEntity(mapSize, 2));
 
+        _bgEntities.add(new BackgroundEntity(mapSize, 0));
+        _bgEntities.add(new BackgroundEntity(mapSize, 1));
+        _bgEntities.add(new BackgroundEntity(mapSize, 2));
+
+        for(ParallaxBgEntity entity: _pbgEntities)
+        {
+            entity.show = true;
+            entity.active = true;
+            entity.ignoreRaycast = true;
+            entity.isUI = false;
+        }
         for(BackgroundEntity entity: _bgEntities)
         {
             entity.show = true;
@@ -73,6 +88,12 @@ public class MainGameScene extends GameScene {
             entity.onUpdate(dt);
         }
 
+        for(ParallaxBgEntity entity: _pbgEntities)
+        {
+            if(entity.canDestroy())
+                continue;
+            entity.onUpdate(dt);
+        }
         for(BackgroundEntity entity: _bgEntities)
         {
             if(entity.canDestroy())
@@ -87,6 +108,11 @@ public class MainGameScene extends GameScene {
     public void onRender(Canvas canvas)
     {
         if(gm.isLoaded()) {
+            for (ParallaxBgEntity entity : _pbgEntities) {
+                if (entity.canDestroy() || !entity.show)
+                    continue;
+                entity.onRender(canvas);
+            }
             for (BackgroundEntity entity : _bgEntities) {
                 if (entity.canDestroy() || !entity.show)
                     continue;

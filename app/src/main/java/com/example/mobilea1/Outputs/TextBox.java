@@ -7,7 +7,7 @@ import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class TextBox extends Text{
 String text;
-    TextBox(String Text, Vector2 pos, float textSize, int color, Paint.Align align, boolean isui) {
+    public TextBox(String Text, Vector2 pos, float textSize, int color, Paint.Align align, boolean isui) {
         super(pos, textSize, color, align, isui);
         text = Text;
     }

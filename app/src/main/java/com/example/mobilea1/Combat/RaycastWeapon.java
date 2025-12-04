@@ -47,8 +47,8 @@ public class RaycastWeapon extends WeaponBase{
     @Override
     public void onUpdate(float dt) {
 
-        float p0_x = _position.x;
-        float p0_y = _position.y;
+        float p0_x = _position.x + size.x * 0.5f;
+        float p0_y = _position.y + size.y * 0.5f;
 
         Vector2 dir = owner.getAimDir().normalize();
 
@@ -80,9 +80,9 @@ public class RaycastWeapon extends WeaponBase{
     @Override
     public void onRender(Canvas canvas) {
         if(hit != null)
-            canvas.drawLine(_renderPosition.x,_renderPosition.y,pointxRP, pointyRP, hitPaint);
+            canvas.drawLine(_renderPosition.x  + size.x * 0.5f,_renderPosition.y + size.y * 0.5f,pointxRP, pointyRP, hitPaint);
 
-        canvas.drawLine(_renderPosition.x,_renderPosition.y, p1_xRP, p1_yRP, debugPaint);
+        canvas.drawLine(_renderPosition.x + size.x * 0.5f,_renderPosition.y + size.y * 0.5f, p1_xRP, p1_yRP, debugPaint);
 
     }
 }

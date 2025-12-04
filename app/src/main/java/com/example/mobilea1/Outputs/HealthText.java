@@ -6,8 +6,6 @@ import android.graphics.Paint;
 import com.example.mobilea1.Entities.CharacterEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
-import org.w3c.dom.Entity;
-
 public class HealthText extends Text{
     int num;
     CharacterEntity entity;
@@ -26,7 +24,7 @@ public class HealthText extends Text{
     @Override
     public void onUpdate(float dt) {
         num = (int) entity.health;
-        _position = new Vector2( entity.getPosition().x, entity.getPosition().y - 100f);
+        _position = new Vector2( entity.getPosition().x, entity.getPosition().y - 50f);
 
         if(num <= 0)
         {

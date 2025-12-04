@@ -61,6 +61,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -133,6 +135,17 @@ public class GameActivity extends FragmentActivity {
         instance = this;
         SurfaceView surfaceView = new SurfaceView(this);
         setContentView(surfaceView);
+
+        getWindow().setDecorFitsSystemWindows(false);
+
+        WindowInsetsController controller = getWindow().getInsetsController();
+        if (controller != null) {
+            controller.hide(WindowInsets.Type.statusBars());
+            controller.setSystemBarsBehavior(
+                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            );
+        }
+
         _updateThread = new UpdateThread(surfaceView);
     }
 

@@ -120,6 +120,5 @@ public class Camera extends GameEntity
 
     @Override
     public void onRender(Canvas canvas) {
-        return;
     }
 }

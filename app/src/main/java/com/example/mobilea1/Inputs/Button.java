@@ -3,7 +3,10 @@ package com.example.mobilea1.Inputs;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
+import com.example.mobilea1.Outputs.TextBox;
 import com.example.mobilea1.R;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
@@ -25,6 +28,8 @@ public class Button extends GameEntity
     public TYPE type;
     public boolean toggled = false;
 
+    public TextBox btnText;
+
     public Button(Vector2 position,int Radius,TYPE Type)
     {
        _position = position;
@@ -35,9 +40,10 @@ public class Button extends GameEntity
         PressedSprite = Bitmap.createScaledBitmap(bmpPressed, radius * 2, radius * 2, true);
         UnpressedSprite = Bitmap.createScaledBitmap(bmpUnpressed, radius * 2, radius * 2, true);
 
-
         pointerID = -1;
         type = Type;
+        btnText = new TextBox("",_position.copy(), 75, Color.WHITE, Paint.Align.CENTER, true);
+        btnText.setPosition(new Vector2(_position.x, _position.y));
     }
     public void setPressed(boolean pressed, int PointerID)
     {
@@ -96,6 +102,6 @@ public class Button extends GameEntity
             spriteToDraw = toggled ? UnpressedSprite : PressedSprite;
         }
 
-        canvas.drawBitmap(spriteToDraw, _position.x - radius * 2, _position.y - radius * 2, null);
+        canvas.drawBitmap(spriteToDraw, _position.x - radius , _position.y - radius , null);
     }
 }

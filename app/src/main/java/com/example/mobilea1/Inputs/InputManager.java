@@ -3,6 +3,7 @@ package com.example.mobilea1.Inputs;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import com.example.mobilea1.Outputs.TextManager;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
@@ -22,13 +23,22 @@ public class InputManager {
         screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
         screenHeight = GameActivity.instance.getResources().getDisplayMetrics().heightPixels;
 
-        jumpButton = new Button(new Vector2(screenWidth - 200, screenHeight - 200), 100, Button.TYPE.MomentaryPush);
-        switchButton = new Button(new Vector2(screenWidth - 100, screenHeight - 400), 100, Button.TYPE.Toggle);
+        jumpButton = new Button(new Vector2(screenWidth - 400, screenHeight - 200), 100, Button.TYPE.MomentaryPush);
+        switchButton = new Button(new Vector2(screenWidth - 200, screenHeight - 400), 100, Button.TYPE.Toggle);
         joystick = new Joystick(new Vector2(0, 0), 70, 40);
 
         inputEntities.add(jumpButton);
         inputEntities.add(switchButton);
         inputEntities.add(joystick);
+
+        jumpButton.btnText.changeText("Jump");
+        switchButton.btnText.changeText("Lock in");
+
+        jumpButton.btnText.show = true;
+        switchButton.btnText.show = true;
+
+        TextManager.getInstance()._textEntities.add(jumpButton.btnText);
+        TextManager.getInstance()._textEntities.add(switchButton.btnText);
 
         for (GameEntity e : inputEntities) {
             e.show = true;
@@ -165,6 +175,8 @@ public class InputManager {
 
     public void update(float dt) {
         for (GameEntity e : inputEntities) {
+            jumpButton.btnText.changeText(switchButton.toggled? "FIRE!!!" : "Jump");
+            switchButton.btnText.changeText(switchButton.toggled? "Move" : "Lock In");
             e.onUpdate(dt);
         }
     }

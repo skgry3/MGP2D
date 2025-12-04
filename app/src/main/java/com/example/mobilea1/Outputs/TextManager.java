@@ -3,21 +3,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.example.mobilea1.GameManager;
 import com.example.mobilea1.mgp2dCore.GameActivity;
-import com.example.mobilea1.mgp2dCore.GameEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
 import java.util.Vector;
 
 public class TextManager {
-    private int _screenWidth;
-    private int _screenHeight;
+    private final int _screenWidth;
+    private final int _screenHeight;
     public Vector<Text> _textEntities = new Vector<>();
     FPSText FPS;
     public TextBox Results;
     public TextBox Turns;
-    private boolean isLoaded;
+    private final boolean isLoaded;
     private TextManager() {
 
         _screenWidth = GameActivity.instance.getResources().getDisplayMetrics().widthPixels;
