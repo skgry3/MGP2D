@@ -66,9 +66,9 @@ public class AnimatedSprite {
         _src.right = srcX + _width;
         _src.bottom = srcY + _height;
 
-        _dst.left = (int) (x - _width);
-        _dst.top = (int) (y - _height);
-        _dst.right = (int) (x + _width);
+        _dst.left = (int) x;
+        _dst.top = (int) y;
+        _dst.right = (int) (x + _width );
         _dst.bottom = (int) (y + _height);
 
         canvas.drawBitmap(_bmp, _src, _dst, paint);

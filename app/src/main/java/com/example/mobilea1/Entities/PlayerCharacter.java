@@ -44,6 +44,7 @@ public class PlayerCharacter extends CharacterEntity {
         _position = spawnPos;
         gm = GM;
         im = InputManager.getInstance();
+
         Bitmap bmp  = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.runhaolinkin);
         sprite = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);
 
@@ -108,27 +109,11 @@ public class PlayerCharacter extends CharacterEntity {
 
             if (im.getJumpButton().isPressed(im.getJumpButton().pointerID) && onGround) {
                 Jump();
-                changeAnimation(animatedSpriteJumpUp);
             }
         }
     }
     private void changeAnimation(AnimatedSprite animation) {
-        if (chosenAnimation == animatedSpriteJumpDown) {
-            if (onGround) {
-                chosenAnimation = animation;
-            }
-        } else if (chosenAnimation == animatedSpriteJumpUp) {
-            if (onGround || animation == animatedSpriteJumpDown) {
-                chosenAnimation = animation;
-            }
-        } else if (chosenAnimation == animatedSpriteRun) {
-            if (animation == animatedSpriteJumpUp) {
-                chosenAnimation = animation;
-            }
-            if (animation == animatedSpriteIdle) {
-                chosenAnimation = animation;
-            }
-        } else { //run
+        if (chosenAnimation != animation) {
             chosenAnimation = animation;
         }
     }
@@ -141,16 +126,22 @@ public class PlayerCharacter extends CharacterEntity {
     public void onUpdate(float dt)
     {
         super.onUpdate(dt);
-        if(VerticalVel > 0 && !onGround)
-        {
-            changeAnimation(animatedSpriteJumpDown);
+
+        // Animation state machine
+        if (!onGround) {
+            if (VerticalVel > 0) { // Is falling
+                changeAnimation(animatedSpriteJumpDown);
+            } else { // Is jumping up
+                changeAnimation(animatedSpriteJumpUp);
+            }
+        } else { // Is on the ground
+            if (Math.abs(HorizontalVel) > 1) { // Is running
+                changeAnimation(animatedSpriteRun);
+            } else { // Is idle
+                changeAnimation(animatedSpriteIdle);
+            }
         }
-        else if(Math.abs(HorizontalVel) > 1){
-            changeAnimation(animatedSpriteRun);
-        }
-        else {
-            changeAnimation(animatedSpriteIdle);
-        }
+
         chosenAnimation.update(dt);
     }
 
@@ -158,9 +149,9 @@ public class PlayerCharacter extends CharacterEntity {
     public void onRender(Canvas canvas)
     {
         canvas.save();
-        canvas.scale(flip, 1, _renderPosition.x, _renderPosition.y);
+        canvas.scale(flip, 1, _renderPosition.x + size.x * 0.5f, _renderPosition.y);
+        canvas.drawBitmap(sprite,_renderPosition.x, _renderPosition.y, null);
         chosenAnimation.render(canvas, (int) _renderPosition.x, (int) _renderPosition.y, null);
-        //canvas.drawBitmap(sprite,_renderPosition.x, _renderPosition.y, null);
         canvas.restore();
 
         super.onRender(canvas);
