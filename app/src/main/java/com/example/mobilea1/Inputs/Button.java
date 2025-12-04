@@ -96,6 +96,6 @@ public class Button extends GameEntity
             spriteToDraw = toggled ? UnpressedSprite : PressedSprite;
         }
 
-        canvas.drawBitmap(spriteToDraw, _position.x - radius * 2, _position.y - radius * 2, null);
+        canvas.drawBitmap(spriteToDraw, _position.x - radius , _position.y - radius , null);
     }
 }
