@@ -20,6 +20,7 @@ import com.example.mobilea1.mgp2dCore.Vector2;
 public class PlayerCharacter extends CharacterEntity {
     InputManager im;
     GameManager gm;
+    private final Bitmap sprite;
     private final Bitmap spriteRun;
     private final Bitmap spriteIdle;
     private final Bitmap spriteJumpUp;
@@ -43,6 +44,8 @@ public class PlayerCharacter extends CharacterEntity {
         _position = spawnPos;
         gm = GM;
         im = InputManager.getInstance();
+        Bitmap bmp  = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.runhaolinkin);
+        sprite = Bitmap.createScaledBitmap(bmp, (int) size.x, (int) size.y, true);
 
         Bitmap bmp0 = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.run);
         spriteRun = Bitmap.createScaledBitmap(bmp0, (int) size.x * 9, (int) size.y, true);
@@ -157,6 +160,7 @@ public class PlayerCharacter extends CharacterEntity {
         canvas.save();
         canvas.scale(flip, 1, _renderPosition.x, _renderPosition.y);
         chosenAnimation.render(canvas, (int) _renderPosition.x, (int) _renderPosition.y, null);
+        //canvas.drawBitmap(sprite,_renderPosition.x, _renderPosition.y, null);
         canvas.restore();
 
         super.onRender(canvas);

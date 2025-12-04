@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">Mobile A1</string>
     <string name="help">help</string>
-    <string name="play" />
-    <string name="start" />
+    <string name="play">play</string>
+    <string name="start"> start</string>
+    <string name="back">back</string>
+    <string name="how_to_play">How to Play</string>
+    <string name="instructions">
+        •use joystick to move player \n
+        •use top button to toggle between fire and move mode \n
+        •use bottom button to jump during move mode and fire during fire mode \n
+        \n
+        Kill all enemies to win
+    </string>
 </resources>

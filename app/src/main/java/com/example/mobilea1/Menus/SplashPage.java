@@ -18,7 +18,7 @@ public class SplashPage extends Activity implements View.OnClickListener  {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.splashpage);
 
-        StartBtn = findViewById(R.id.startBtn);
+        StartBtn = findViewById(R.id.tapOverlay);
         StartBtn.setOnClickListener(this);
     }
     @Override

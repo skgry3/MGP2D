@@ -1,4 +1,3 @@
-
 package com.example.mobilea1.mgp2dCore;
 
 import android.graphics.Bitmap;
@@ -60,20 +59,17 @@ public class AnimatedSprite {
         int frameX = _currentFrame % _col;
         int frameY = _currentFrame / _col;
         int srcX = frameX * _width;
-        int srcY = frameY & _height;
-
-        x -= (int) (0.5f * _width);
-        y -= (int) (0.5f * _height);
+        int srcY = frameY * _height;
 
         _src.left = srcX;
         _src.top = srcY;
         _src.right = srcX + _width;
         _src.bottom = srcY + _height;
 
-        _dst.left = x;
-        _dst.top = y;
-        _dst.right = x + _width;
-        _dst.bottom = y + _height;
+        _dst.left = (int) (x - _width);
+        _dst.top = (int) (y - _height);
+        _dst.right = (int) (x + _width);
+        _dst.bottom = (int) (y + _height);
 
         canvas.drawBitmap(_bmp, _src, _dst, paint);
     }

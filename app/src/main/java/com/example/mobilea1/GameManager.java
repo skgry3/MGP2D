@@ -202,6 +202,7 @@ public class GameManager {
                 // Find the smallest move distance
                 float resolveX = 0;
                 float resolveY = 0;
+
                 if (overlapX < overlapY)
                 {
                     if (ce.getPosition().x < ground.getPosition().x)
