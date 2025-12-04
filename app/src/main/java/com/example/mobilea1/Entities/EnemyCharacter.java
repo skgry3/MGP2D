@@ -3,10 +3,6 @@ package com.example.mobilea1.Entities;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-
-//import com.example.mobilea1.mgp2dCore.other.AnimatedSprite;
 
 import com.example.mobilea1.Combat.WeaponBase;
 import com.example.mobilea1.GameManager;
@@ -17,10 +13,6 @@ import com.example.mobilea1.mgp2dCore.Vector2;
 
 public class EnemyCharacter extends CharacterEntity {
 
-    private final Bitmap spriteRun;
-    private final Bitmap spriteIdle;
-    private final Bitmap spriteJumpUp;
-    private final Bitmap spriteJumpDown;
     AnimatedSprite animatedSpriteRun;
     AnimatedSprite animatedSpriteIdle;
     AnimatedSprite animatedSpriteJumpUp;
@@ -37,7 +29,7 @@ public class EnemyCharacter extends CharacterEntity {
         Attack,
         Done
     }
-    public STATE currentState;
+    private STATE currentState;
     private float moveTime;
     public void onCreate()
     {
@@ -55,19 +47,19 @@ public class EnemyCharacter extends CharacterEntity {
         currentState = STATE.Idle;
 
         Bitmap bmp0 = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.run);
-        spriteRun = Bitmap.createScaledBitmap(bmp0, (int) size.x * 9, (int) size.y, true);
+        Bitmap spriteRun = Bitmap.createScaledBitmap(bmp0, (int) size.x * 9, (int) size.y, true);
         animatedSpriteRun = new AnimatedSprite(spriteRun, 1, 9, 24);
 
         Bitmap bmp1 = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.idle);
-        spriteIdle = Bitmap.createScaledBitmap(bmp1, (int) size.x * 6, (int) size.y, true);
+        Bitmap spriteIdle = Bitmap.createScaledBitmap(bmp1, (int) size.x * 6, (int) size.y, true);
         animatedSpriteIdle = new AnimatedSprite(spriteIdle, 1, 6, 24);
 
         Bitmap bmp2 = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.jumpup);
-        spriteJumpUp = Bitmap.createScaledBitmap(bmp2, (int) size.x, (int) size.y, true);
+        Bitmap spriteJumpUp = Bitmap.createScaledBitmap(bmp2, (int) size.x, (int) size.y, true);
         animatedSpriteJumpUp = new AnimatedSprite(spriteJumpUp, 1, 1, 24);
 
         Bitmap bmp3 = BitmapFactory.decodeResource(GameActivity.instance.getResources(), R.drawable.jumpdown);
-        spriteJumpDown = Bitmap.createScaledBitmap(bmp3, (int) size.x, (int) size.y, true);
+        Bitmap spriteJumpDown = Bitmap.createScaledBitmap(bmp3, (int) size.x, (int) size.y, true);
         animatedSpriteJumpDown = new AnimatedSprite(spriteJumpDown, 1, 1, 24);
 
         chosenAnimation = animatedSpriteIdle;

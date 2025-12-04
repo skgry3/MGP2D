@@ -21,8 +21,8 @@ import java.util.Vector;
 public class MainGameScene extends GameScene {
 
     Vector<GameEntity> _cameraEntities = new Vector<>();
-    Vector<ParallaxBgEntity> _pbgEntities = new Vector<ParallaxBgEntity>();
-    Vector<BackgroundEntity> _bgEntities = new Vector<BackgroundEntity>();
+    Vector<ParallaxBgEntity> _pbgEntities = new Vector<>();
+    Vector<BackgroundEntity> _bgEntities = new Vector<>();
     float screenWidth;
     float screenHeight;
     public static Vector2 mapSize = new Vector2(2000,1000);

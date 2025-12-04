@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.example.mobilea1.GameManager;
 import com.example.mobilea1.R;
 import com.example.mobilea1.mgp2dCore.GameActivity;
 import com.example.mobilea1.mgp2dCore.GameEntity;

@@ -6,8 +6,6 @@ import android.graphics.Paint;
 import com.example.mobilea1.Entities.CharacterEntity;
 import com.example.mobilea1.mgp2dCore.Vector2;
 
-import org.w3c.dom.Entity;
-
 public class HealthText extends Text{
     int num;
     CharacterEntity entity;

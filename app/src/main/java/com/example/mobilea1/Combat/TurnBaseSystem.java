@@ -3,7 +3,6 @@ package com.example.mobilea1.Combat;
 import com.example.mobilea1.Entities.CharacterEntity;
 import com.example.mobilea1.Entities.EnemyCharacter;
 import com.example.mobilea1.Entities.PlayerCharacter;
-import com.example.mobilea1.GameManager;
 import com.example.mobilea1.Outputs.TextManager;
 
 import java.util.Vector;
@@ -102,7 +101,8 @@ public class TurnBaseSystem {
 
         // Enter resolution state
         state = GameState.RESOLVING;
-        System.out.println(state.name());
+        TextManager.getInstance().Turns.changeText("Resolving..." );
+
 
         resolveTimer = resolveTime;
 
@@ -141,7 +141,6 @@ public class TurnBaseSystem {
             TextManager.getInstance().Results.changeText("WIN!!!!!");
             TextManager.getInstance().Results.show = true;
             System.out.println("Players win!");
-            return;
         }
     }
 }

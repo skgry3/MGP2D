@@ -5,7 +5,6 @@ import static com.example.mobilea1.Scenes.MainGameScene.mapSize;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
 import com.example.mobilea1.Combat.IDamageable;
 import com.example.mobilea1.Combat.WeaponBase;

@@ -1,6 +1,5 @@
 package com.example.mobilea1;
 
-import android.graphics.Canvas;
 
 import com.example.mobilea1.mgp2dCore.Vector2;
 
